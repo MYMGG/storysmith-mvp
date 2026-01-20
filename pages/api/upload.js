@@ -4,7 +4,7 @@ import { put } from '@vercel/blob';
 import { NextResponse } from 'next/server';
 
 export const config = {
-  runtime: 'edge',
+  runtime: 'nodejs',
 };
 
 export default async function upload(request) {
