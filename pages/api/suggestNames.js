@@ -2,23 +2,26 @@
 
 import OpenAI from 'openai';
 
-if (!process.env.OPENAI_API_KEY) {
-    throw new Error('Missing OPENAI_API_KEY environment variable');
-}
-
-const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-});
+const getOpenAIClient = (apiKey) => {
+    const finalKey = apiKey || process.env.OPENAI_API_KEY;
+    if (!finalKey) {
+        throw new Error('Missing OPENAI_API_KEY - please set it in Settings or environment variable');
+    }
+    return new OpenAI({
+        apiKey: finalKey,
+    });
+};
 
 export default async function handler(req, res) {
     if (req.method !== 'POST') {
         return res.status(405).json({ message: 'Method Not Allowed' });
     }
 
-    const { gender } = req.body;
+    const { gender, apiKey } = req.body;
     const prompt = `Generate a list of 5 heroic fantasy names for a ${gender} child. The names should be short and easy to pronounce. Return the list as a simple JSON array of strings. Do not include any other text.`;
 
     try {
+        const openai = getOpenAIClient(apiKey);
         const chatCompletion = await openai.chat.completions.create({
             model: "gpt-3.5-turbo",
             messages: [{ role: "user", content: prompt }],

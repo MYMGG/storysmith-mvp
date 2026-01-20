@@ -6,7 +6,7 @@ export default function useForgeHeroApis(heroDetails, setSharedResponse) {
     const [isImageLoading_local, setIsImageLoading_local] = useState(false);
     const [isNameLoading, setIsNameLoading] = useState(false);
     const [isHeroSurpriseLoading, setIsHeroSurpriseLoading] = useState(false);
-    
+
     const [heroImageUrl, setHeroImageUrl] = useState('');
     const [generatedName, setGeneratedName] = useState('');
     const [suggestedNames, setSuggestedNames] = useState([]);
@@ -15,18 +15,19 @@ export default function useForgeHeroApis(heroDetails, setSharedResponse) {
     const generateRealImage = async (prompt) => {
         setIsImageLoading_local(true);
         setSharedResponse("The forge hums with power... a new image is being crafted!");
-        
+
         try {
+            const apiKey = typeof window !== 'undefined' ? localStorage.getItem('STORYSMITH_API_KEY') : null;
             const response = await fetch('/api/generateImage', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ prompt }),
+                body: JSON.stringify({ prompt, apiKey }),
             });
 
             if (!response.ok) {
                 throw new Error('Image generation failed on the server.');
             }
-            
+
             const data = await response.json();
             setHeroImageUrl(data.imageUrl);
             setSharedResponse("Behold, the hero’s face shines with living light! ✨🖼️");
@@ -38,20 +39,23 @@ export default function useForgeHeroApis(heroDetails, setSharedResponse) {
             setIsImageLoading_local(false);
         }
     };
-    
+
     const generateAIName = async (type) => {
         setIsNameLoading(true);
         setSharedResponse("By the power of starlight, a name is born!");
-        
+
         try {
+            const apiKey = typeof window !== 'undefined' ? localStorage.getItem('STORYSMITH_API_KEY') : null;
             const response = await fetch('/api/generateName', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ type, gender: heroDetails.gender }),
+                body: JSON.stringify({ type, gender: heroDetails.gender, apiKey }),
             });
 
             if (!response.ok) {
-                throw new Error('Name generation failed.');
+                const errorData = await response.json().catch(() => ({}));
+                console.error("Server API Error:", errorData);
+                throw new Error(errorData.error || errorData.message || 'Name generation failed.');
             }
 
             const data = await response.json();
@@ -65,20 +69,23 @@ export default function useForgeHeroApis(heroDetails, setSharedResponse) {
             setIsNameLoading(false);
         }
     };
-    
+
     const generateSuggestedNames = async () => {
         setIsNameLoading(true);
         setSharedResponse("The winds of inspiration whisper... what names shall they carry?");
-        
+
         try {
+            const apiKey = typeof window !== 'undefined' ? localStorage.getItem('STORYSMITH_API_KEY') : null;
             const response = await fetch('/api/suggestNames', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ gender: heroDetails.gender }),
+                body: JSON.stringify({ gender: heroDetails.gender, apiKey }),
             });
 
             if (!response.ok) {
-                throw new Error('Name suggestions failed.');
+                const errorData = await response.json().catch(() => ({}));
+                console.error("Server API Error:", errorData);
+                throw new Error(errorData.error || errorData.message || 'Name suggestions failed.');
             }
 
             const data = await response.json();
@@ -91,20 +98,23 @@ export default function useForgeHeroApis(heroDetails, setSharedResponse) {
             setIsNameLoading(false);
         }
     };
-    
+
     const generateSurpriseHero = async (heroType) => {
         setIsHeroSurpriseLoading(true);
         setSharedResponse("A hero, conjured from the void!");
-        
+
         try {
+            const apiKey = typeof window !== 'undefined' ? localStorage.getItem('STORYSMITH_API_KEY') : null;
             const response = await fetch('/api/surpriseHeroDetails', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ heroType }),
+                body: JSON.stringify({ heroType, apiKey }),
             });
 
             if (!response.ok) {
-                throw new Error('Surprise hero generation failed.');
+                const errorData = await response.json().catch(() => ({}));
+                console.error("Server API Error:", errorData);
+                throw new Error(errorData.error || errorData.message || 'Surprise hero generation failed.');
             }
 
             const data = await response.json();

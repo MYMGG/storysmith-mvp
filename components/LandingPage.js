@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
+import ApiKeyManager from './ApiKeyManager';
 
 export default function LandingPage({ email, setEmail, showLandingPage, setShowLandingPage, isVideoFinished, setIsVideoFinished, handleSignUpSubmit, showPasswordInput, setShowPasswordInput, adminPasswordInput, setAdminPasswordInput, handleAdminLogin }) {
+  const [showApiKeyManager, setShowApiKeyManager] = useState(false);
   const handleVideoEnd = () => {
     setIsVideoFinished(true);
   };
@@ -24,7 +26,7 @@ export default function LandingPage({ email, setEmail, showLandingPage, setShowL
           </h2>
 
           <hr className="w-24 border-t-2 border-amber-300 opacity-60 mb-8" />
-          
+
           <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold mb-4" style={{ fontFamily: 'Cinzel, serif', color: '#F5F0E8' }}>
             Your Story, Magically Told.
           </h1>
@@ -37,7 +39,7 @@ export default function LandingPage({ email, setEmail, showLandingPage, setShowL
               The power of AI, made simple for everyone.
             </p>
           </div>
-          
+
           <form onSubmit={handleSignUpSubmit} className="flex flex-col sm:flex-row items-center w-full max-w-lg space-y-4 sm:space-y-0 sm:space-x-4 mt-8 px-4 sm:px-0">
             <input
               type="email"
@@ -112,6 +114,18 @@ export default function LandingPage({ email, setEmail, showLandingPage, setShowL
           Admin
         </button>
       )}
+
+      {/* Settings (Gear Icon) Button */}
+      <button
+        onClick={() => setShowApiKeyManager(true)}
+        className="absolute bottom-5 left-1/2 -translate-x-1/2 bg-black bg-opacity-50 text-white text-xs px-3 py-2 rounded opacity-50 hover:opacity-100 transition-opacity z-20 flex items-center gap-2"
+        title="Manage API Key"
+      >
+        ⚙️ Settings
+      </button>
+
+      {/* API Key Manager Modal */}
+      <ApiKeyManager isOpen={showApiKeyManager} onClose={() => setShowApiKeyManager(false)} />
     </div>
   );
 }

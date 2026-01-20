@@ -4,16 +4,26 @@ import fs from 'fs';
 import path from 'path';
 import OpenAI from "openai";
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+const getOpenAIClient = (apiKey) => {
+  const finalKey = apiKey || process.env.OPENAI_API_KEY;
+  if (!finalKey) {
+    throw new Error('Missing OPENAI_API_KEY - please set it in Settings or environment variable');
+  }
+  return new OpenAI({
+    apiKey: finalKey,
+  });
+};
 
 export default async function handler(req, res) {
   try {
-    const { userMessage } = req.body;
+    const { userMessage, apiKey } = req.body;
     if (!userMessage) return res.status(400).json({ error: "Missing userMessage" });
 
     // Load prompt text from external .txt file
     const promptPath = path.join(process.cwd(), 'prompts', '01_Hero_And_Blueprint.txt');
     const fullPrompt = fs.readFileSync(promptPath, 'utf8');
+
+    const openai = getOpenAIClient(apiKey);
 
     // Call OpenAI API
     const chatResponse = await openai.chat.completions.create({
