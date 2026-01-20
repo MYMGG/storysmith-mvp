@@ -52,17 +52,9 @@ export default function LandingPage() {
       >
         <div className="flex flex-col items-center justify-center h-full text-center text-white p-4 bg-black bg-opacity-40">
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setStatus('loading');
-    try {
-      const res = await fetch('/api/subscribe-direct', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email }),
-      });
+          <h2 className="text-5xl font-bold mb-4 tracking-wider" style={{ fontFamily: 'Cinzel, serif', color: '#F5F0E8', textShadow: '1px 1px 3px rgba(0,0,0,0.3)' }}>
+            StorySmith
+          </h2>
 
           <hr className="w-24 border-t-2 border-amber-300 opacity-60 mb-8" />
 
@@ -97,10 +89,7 @@ export default function LandingPage() {
             </form>
           )}
 
-  return (
-    <section className="relative flex items-center justify-center h-screen bg-gradient-to-b from-purple-800 to-indigo-900 text-white">
-      <div className="absolute inset-0 opacity-30">
-        {/* Background video or image can go here */}
+        </div>
       </div>
       {/* The promo video that plays on top */}
       <video
@@ -199,6 +188,4 @@ export default function LandingPage() {
       </div>
     </div>
   );
-};
-
-export default LandingPage;
+}

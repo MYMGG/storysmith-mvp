@@ -1,16 +1,12 @@
-/* globals.css */
-.typewriter-effect {
-  display: inline-block;
-  white-space: pre-line;
-  overflow: hidden;
-  border-right: .1em solid currentColor;
-  animation: typing 3s steps(40, end), blink-caret .5s step-end infinite;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes typing {
-  from { width: 0; }
-  to   { width: 100%; }
-}
-@keyframes blink-caret {
-  50% { border-color: transparent; }
+.animate-fade-in {
+  animation: fade-in 0.8s ease-out;
 }
