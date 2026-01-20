@@ -1,132 +1,78 @@
-// pages/index.js
-
-import { useState } from 'react';
+import React, { useEffect } from 'react';
 import Head from 'next/head';
-import LandingPage from '../components/LandingPage';
-import ForgeHero from '../components/ForgeHero';
-import SpinTale from '../components/SpinTale';
-import BindBook from '../components/BindBook';
-import useAdminAuth from '../hooks/useAdminAuth';
-
-const initialStoryState = {
-  story_content: {
-    CharacterBlock: null,
-    StoryBlueprintBlock: null,
-    SceneJSON_array: [],
-    Cover: null,
-  },
-  story_data: {
-    visual_style: "3D animated Film",
-  },
-};
+import { useStory } from '../context/StoryContext';
+import useTypewriter from '../hooks/useTypewriter';
+import KeeperMessage from '../components/KeeperMessage';
+import LandingPage from './components/LandingPage';
+import ForgeHero from './components/ForgeHero';
+import SpinTale from './components/SpinTale';
+import BindBook from './components/BindBook';
 
 export default function Home() {
-  const [email, setEmail] = useState('');
-  const [showLandingPage, setShowLandingPage] = useState(true);
-  const [activeTab, setActiveTab] = useState(0);
-  const [isVideoFinished, setIsVideoFinished] = useState(false);
-  const [storyState, setStoryState] = useState(initialStoryState);
-  const [sharedResponse, setSharedResponse] = useState("");
-  const password = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || '6425';
+  const { showLandingPage, activeTab, sharedResponse } = useStory();
+  const keeperDialogue = useTypewriter(sharedResponse, 40);
 
-  const {
-    showPasswordInput,
-    setShowPasswordInput,
-    adminPasswordInput,
-    setAdminPasswordInput,
-    handleAdminLogin,
-  } = useAdminAuth(password, () => setShowLandingPage(false));
+  // Focus the first interactive element after Keeper finishes typing
+  useEffect(() => {
+    if (!showLandingPage && keeperDialogue === sharedResponse) {
+      const firstBtn = document.querySelector('main button');
+      if (firstBtn) {
+        firstBtn.focus();
+      }
+    }
+  }, [keeperDialogue, sharedResponse, showLandingPage]);
 
-  // This is the correct array that the application should be using
-  const tabs = [
-    { label: 'Forge Hero', videoSrc: '/videos/Keeper1.mp4', bgSrc: '/background1.jpg' },
-    { label: 'Spin Tale', videoSrc: '/videos/Keeper2.mp4', bgSrc: '/background2.jpg' },
-    { label: 'Bind Book', videoSrc: '/videos/Keeper3.mp4', bgSrc: '/background3.jpg' },
-  ];
-  
-  const handleSignUpSubmit = (e) => { /* ... */ };
-  
-  const resetApp = () => {
-    setStoryState(initialStoryState);
-    setActiveTab(0);
-    setShowLandingPage(true);
-    setSharedResponse("");
+  const renderAppInterface = () => {
+    switch (activeTab) {
+      case 0:
+        return <ForgeHero />;
+      case 1:
+        return <SpinTale />;
+      case 2:
+        return <BindBook />;
+      default:
+        return null;
+    }
   };
-
-  const renderAppInterface = () => (
-    <div className="min-h-screen flex flex-col text-white relative overflow-hidden" style={{ fontFamily: 'Lato, sans-serif' }}>
-      {/* Dynamic Background System */}
-      <div className="absolute inset-0 z-0">
-        {tabs.map((tab, index) => (
-          <div
-            key={index}
-            className="absolute inset-0 transition-opacity duration-1000 ease-in-out"
-            style={{
-              backgroundImage: `url('${tab.bgSrc}')`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              backgroundAttachment: 'fixed',
-              opacity: activeTab === index ? 1 : 0,
-            }}
-          />
-        ))}
-      </div>
-      <div className="absolute inset-0 z-1 bg-black/50" />
-      
-      <div className="relative z-10 flex flex-col min-h-screen">
-        <header className="bg-transparent py-4">
-          <div className="max-w-screen-2xl mx-auto px-8 flex justify-between items-center">
-            <h1 className="text-4xl sm:text-5xl font-extrabold text-stone-200" style={{ fontFamily: 'Cinzel, serif', textShadow: '0 0 5px rgba(255, 255, 255, 0.2)' }}>
-              StorySmith
-            </h1>
-            <nav><ul className="flex space-x-6"><li><a href="#" onClick={(e) => { e.preventDefault(); resetApp(); }} className="text-gray-300 hover:text-white transition-colors">Home</a></li></ul></nav>
-          </div>
-        </header>
-        
-        <main className="flex-1 flex flex-col md:flex-row gap-8 items-stretch p-8">
-            <div className="relative flex-grow w-full md:w-1/2 min-h-0 rounded-2xl shadow-2xl overflow-hidden">
-                <video
-                    key={tabs[activeTab].videoSrc}
-                    className="absolute top-0 left-0 w-full h-full object-cover"
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                >
-                    <source src={tabs[activeTab].videoSrc} type="video/mp4" />
-                    Your browser does not support the video tag.
-                </video>
-            </div>
-            <div className="flex-grow w-full md:w-1/2 flex justify-center items-center">
-                {activeTab === 0 && <ForgeHero storyState={storyState} setStoryState={setStoryState} setActiveTab={setActiveTab} setSharedResponse={setSharedResponse} />}
-                {activeTab === 1 && <SpinTale storyState={storyState} setStoryState={setStoryState} setActiveTab={setActiveTab} setSharedResponse={setSharedResponse} />}
-                {activeTab === 2 && <BindBook storyState={storyState} setStoryState={setStoryState} setActiveTab={setActiveTab} setSharedResponse={setSharedResponse} resetApp={resetApp} />}
-            </div>
-        </main>
-      </div>
-    </div>
-  );
 
   return (
     <>
       <Head>
-        <title>StorySmith - Your Imagination, Illustrated</title>
-        {/* Head content... */}
+        <title>StorySmith</title>
+        <link rel="icon" href="/favicon.ico" />
       </Head>
-      {showLandingPage ? (
-        <LandingPage 
-          email={email}
-          setEmail={setEmail}
-          isVideoFinished={isVideoFinished}
-          setIsVideoFinished={setIsVideoFinished}
-          handleSignUpSubmit={handleSignUpSubmit}
-          showPasswordInput={showPasswordInput}
-          setShowPasswordInput={setShowPasswordInput}
-          adminPasswordInput={adminPasswordInput}
-          setAdminPasswordInput={setAdminPasswordInput}
-          handleAdminLogin={handleAdminLogin} 
+
+      <div className="relative min-h-screen flex flex-col items-center justify-center text-stone-200">
+        <video
+          src={showLandingPage ? '/Keeper1.mp4' : `/Keeper${activeTab + 1}.mp4`}
+          className="absolute inset-0 w-full h-full object-cover z-0 transition-opacity duration-1000"
+          autoPlay
+          loop
+          muted
         />
-      ) : renderAppInterface()}
+        <div className="absolute inset-0 bg-stone-900/50 backdrop-blur-sm z-10" />
+
+        <main className="relative z-20 flex flex-col items-center justify-center w-full max-w-4xl px-4 py-8">
+          <div className="text-center mb-10">
+            {!showLandingPage && (
+              <h1 className="text-5xl font-bold font-serif text-amber-300 drop-shadow-lg leading-tight">
+                The StorySmith
+              </h1>
+            )}
+          </div>
+
+          {showLandingPage ? (
+            <LandingPage />
+          ) : (
+            <>
+              <KeeperMessage text={keeperDialogue} />
+              <div className="w-full max-w-lg">
+                {renderAppInterface()}
+              </div>
+            </>
+          )}
+        </main>
+      </div>
     </>
   );
 }
