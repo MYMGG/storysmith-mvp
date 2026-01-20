@@ -2,18 +2,20 @@
 
 import OpenAI from 'openai';
 
-if (!process.env.OPENAI_API_KEY) {
-    throw new Error('Missing OPENAI_API_KEY environment variable');
-}
-
-const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-});
-
 export default async function handler(req, res) {
     if (req.method !== 'POST') {
         return res.status(405).json({ message: 'Method Not Allowed' });
     }
+
+    const apiKey = req.headers['x-openai-api-key'] || process.env.OPENAI_API_KEY;
+
+    if (!apiKey) {
+         return res.status(500).json({ message: 'Missing OpenAI API Key' });
+    }
+
+    const openai = new OpenAI({
+        apiKey: apiKey,
+    });
 
     const { heroType } = req.body;
 

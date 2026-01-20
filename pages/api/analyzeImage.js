@@ -3,10 +3,6 @@
 import { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } from '@google/generative-ai';
 
 const MODEL_NAME = "gemini-1.5-flash"; // Or "gemini-pro-vision"
-const API_KEY = process.env.GOOGLE_API_KEY;
-
-// Initialize the Google Generative AI client
-const genAI = new GoogleGenerativeAI(API_KEY);
 
 // Helper function to fetch image data from a URL
 async function urlToGenerativePart(url, mimeType) {
@@ -25,9 +21,14 @@ export default async function handler(req, res) {
     return res.status(405).json({ message: 'Method Not Allowed' });
   }
 
+  const API_KEY = req.headers['x-google-api-key'] || process.env.GOOGLE_API_KEY;
+
   if (!API_KEY) {
-    return res.status(500).json({ error: "Server configuration error: Google API key is missing." });
+    return res.status(500).json({ error: "Server configuration error: Google API key is missing. Please add it in settings." });
   }
+
+  // Initialize the Google Generative AI client
+  const genAI = new GoogleGenerativeAI(API_KEY);
 
   const { imageUrl, imageMimeType } = req.body;
 
@@ -57,7 +58,7 @@ export default async function handler(req, res) {
     const result = await model.generateContent([prompt, imagePart]);
 
     const responseText = result.response.text();
-    
+
     // Clean the response to ensure it's valid JSON
     const jsonResponse = JSON.parse(responseText.replace(/```json/g, '').replace(/```/g, '').trim());
 

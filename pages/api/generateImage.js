@@ -2,22 +2,23 @@
 
 import OpenAI from 'openai';
 
-// Initialize the OpenAI client with the API key from your environment variables
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
 export default async function handler(req, res) {
   // Ensure the request is a POST request
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method Not Allowed' });
   }
 
+  const apiKey = req.headers['x-openai-api-key'] || process.env.OPENAI_API_KEY;
+
   // Ensure the API key is configured
-  if (!process.env.OPENAI_API_KEY) {
-    return res.status(500).json({ error: "Server configuration error: OpenAI API key is missing." });
+  if (!apiKey) {
+    return res.status(500).json({ error: "Server configuration error: OpenAI API key is missing. Please add it in settings." });
   }
-  
+
+  const openai = new OpenAI({
+    apiKey: apiKey,
+  });
+
   const { prompt } = req.body;
 
   // Ensure a prompt was provided in the request

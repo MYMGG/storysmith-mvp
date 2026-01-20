@@ -1,12 +1,45 @@
 import { useState, useEffect } from 'react';
+import { useStory } from '../context/StoryContext';
+import { Button } from './ui/button';
 
-export default function LandingPage({ email, setEmail, showLandingPage, setShowLandingPage, isVideoFinished, setIsVideoFinished, handleSignUpSubmit, showPasswordInput, setShowPasswordInput, adminPasswordInput, setAdminPasswordInput, handleAdminLogin }) {
+export default function LandingPage() {
+  const {
+    email,
+    setEmail,
+    handleSignUpSubmit,
+    showPasswordInput,
+    setShowPasswordInput,
+    adminPasswordInput,
+    setAdminPasswordInput,
+    handleAdminLogin,
+    isAdminAuthenticated,
+    enterApp,
+    apiKeys,
+    saveApiKey
+  } = useStory();
+
+  const [isVideoFinished, setIsVideoFinished] = useState(false);
+  const [localOpenAIKey, setLocalOpenAIKey] = useState(apiKeys.openai);
+  const [localGoogleKey, setLocalGoogleKey] = useState(apiKeys.google);
+
+  // Sync local state with context state when it changes
+  useEffect(() => {
+    setLocalOpenAIKey(apiKeys.openai);
+    setLocalGoogleKey(apiKeys.google);
+  }, [apiKeys]);
+
   const handleVideoEnd = () => {
     setIsVideoFinished(true);
   };
 
+  const handleSaveKeys = () => {
+    saveApiKey('openai', localOpenAIKey);
+    saveApiKey('google', localGoogleKey);
+    alert('Keys saved!');
+  };
+
   return (
-    <div className="relative h-screen w-screen bg-black">
+    <div className="relative h-screen w-screen bg-black overflow-hidden">
       {/* The main content area */}
       <div
         className="absolute inset-0 transition-opacity duration-1000 ease-in-out"
@@ -24,7 +57,7 @@ export default function LandingPage({ email, setEmail, showLandingPage, setShowL
           </h2>
 
           <hr className="w-24 border-t-2 border-amber-300 opacity-60 mb-8" />
-          
+
           <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold mb-4" style={{ fontFamily: 'Cinzel, serif', color: '#F5F0E8' }}>
             Your Story, Magically Told.
           </h1>
@@ -37,22 +70,24 @@ export default function LandingPage({ email, setEmail, showLandingPage, setShowL
               The power of AI, made simple for everyone.
             </p>
           </div>
-          
-          <form onSubmit={handleSignUpSubmit} className="flex flex-col sm:flex-row items-center w-full max-w-lg space-y-4 sm:space-y-0 sm:space-x-4 mt-8 px-4 sm:px-0">
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email address"
-              className="flex-1 p-2 sm:p-3 rounded-lg text-gray-800 bg-white border border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-500"
-            />
-            <button
-              type="submit"
-              className="px-6 py-3 bg-amber-700 text-white font-bold rounded-lg shadow-md hover:bg-amber-800 transition duration-300"
-            >
-              Notify Me!
-            </button>
-          </form>
+
+          {!isAdminAuthenticated && (
+            <form onSubmit={handleSignUpSubmit} className="flex flex-col sm:flex-row items-center w-full max-w-lg space-y-4 sm:space-y-0 sm:space-x-4 mt-8 px-4 sm:px-0">
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email address"
+                className="flex-1 p-2 sm:p-3 rounded-lg text-gray-800 bg-white border border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-500"
+              />
+              <button
+                type="submit"
+                className="px-6 py-3 bg-amber-700 text-white font-bold rounded-lg shadow-md hover:bg-amber-800 transition duration-300"
+              >
+                Notify Me!
+              </button>
+            </form>
+          )}
 
         </div>
       </div>
@@ -83,35 +118,74 @@ export default function LandingPage({ email, setEmail, showLandingPage, setShowL
       )}
 
       {/* Admin Button and Password Field */}
-      {showPasswordInput ? (
-        <div className="absolute bottom-5 right-5 flex items-center space-x-2 z-20">
-          <input
-            type="password"
-            value={adminPasswordInput}
-            onChange={(e) => setAdminPasswordInput(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                handleAdminLogin();
-              }
-            }}
-            placeholder="Enter password"
-            className="p-1 text-xs rounded bg-black bg-opacity-50 text-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-amber-500"
-          />
+      <div className="absolute bottom-5 right-5 z-20 flex flex-col items-end space-y-2">
+        {isAdminAuthenticated ? (
+          <div className="bg-black/80 p-4 rounded-lg text-white space-y-3 w-80 backdrop-blur-md border border-amber-500/30">
+            <h3 className="text-amber-500 font-bold mb-2">Admin Settings</h3>
+
+            <div className="space-y-1">
+              <label className="text-xs text-stone-300">OpenAI API Key</label>
+              <input
+                type="password"
+                value={localOpenAIKey}
+                onChange={(e) => setLocalOpenAIKey(e.target.value)}
+                className="w-full text-xs p-2 bg-stone-900 border border-stone-700 rounded text-amber-100"
+                placeholder="sk-..."
+              />
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-xs text-stone-300">Google Gemini API Key</label>
+              <input
+                type="password"
+                value={localGoogleKey}
+                onChange={(e) => setLocalGoogleKey(e.target.value)}
+                className="w-full text-xs p-2 bg-stone-900 border border-stone-700 rounded text-amber-100"
+                placeholder="AIza..."
+              />
+            </div>
+
+            <div className="flex justify-between pt-2">
+              <button onClick={handleSaveKeys} className="px-3 py-1 bg-green-700 rounded text-xs hover:bg-green-600">Save Keys</button>
+              <button onClick={enterApp} className="px-3 py-1 bg-amber-700 rounded text-xs hover:bg-amber-600 font-bold">Launch App</button>
+            </div>
+          </div>
+        ) : showPasswordInput ? (
+          <div className="flex items-center space-x-2">
+            <input
+              type="password"
+              value={adminPasswordInput}
+              onChange={(e) => setAdminPasswordInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  handleAdminLogin();
+                }
+              }}
+              placeholder="Enter password"
+              className="p-1 text-xs rounded bg-black bg-opacity-50 text-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-amber-500"
+            />
+            <button
+              onClick={handleAdminLogin}
+              className="px-2 py-1 text-xs rounded bg-amber-700 text-white font-semibold hover:bg-amber-800 transition-colors"
+            >
+              Go
+            </button>
+            <button
+              onClick={() => setShowPasswordInput(false)}
+              className="text-xs text-gray-400 hover:text-white"
+            >
+              x
+            </button>
+          </div>
+        ) : (
           <button
-            onClick={handleAdminLogin}
-            className="px-2 py-1 text-xs rounded bg-amber-700 text-white font-semibold hover:bg-amber-800 transition-colors"
+            onClick={() => setShowPasswordInput(true)}
+            className="bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded opacity-50 hover:opacity-100 transition-opacity"
           >
-            Go
+            Admin
           </button>
-        </div>
-      ) : (
-        <button
-          onClick={() => setShowPasswordInput(true)}
-          className="absolute bottom-5 right-5 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded opacity-50 hover:opacity-100 transition-opacity z-20"
-        >
-          Admin
-        </button>
-      )}
+        )}
+      </div>
     </div>
   );
 }
