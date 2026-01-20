@@ -6,7 +6,7 @@ export default function SpinTale({ storyState, setStoryState, setActiveTab, setS
   const [currentSpinTaleStep, setCurrentSpinTaleStep] = useState(0);
   const [currentSceneIndex, setCurrentSceneIndex] = useState(0);
   const [isGeneratingBlueprint, setIsGeneratingBlueprint] = useState(false);
-  
+
   const hasBlueprintData = storyState.story_content?.StoryBlueprintBlock?.structure?.numberOfScenes > 0;
   const hasHeroData = storyState.story_content?.CharacterBlock?.character_details?.name;
 
@@ -48,7 +48,7 @@ export default function SpinTale({ storyState, setStoryState, setActiveTab, setS
     });
     setCurrentSpinTaleStep(1);
   };
-  
+
   const generateBlueprint = async (heroDetails) => {
     if (isGeneratingBlueprint) return;
     setIsGeneratingBlueprint(true);
@@ -81,21 +81,21 @@ export default function SpinTale({ storyState, setStoryState, setActiveTab, setS
       generateBlueprint(storyState.story_content.CharacterBlock.character_details);
     }
   }, [hasBlueprintData, hasHeroData, isGeneratingBlueprint, storyState]);
-  
+
   useEffect(() => {
-    if (hasBlueprintData && storyState.story_content.SceneJSON_array.length === 0) {
+    if (hasBlueprintData && hasHeroData && (storyState.story_content.SceneJSON_array?.length || 0) === 0) {
       setTimeout(() => {
-          generateAndDisplayScene(1, storyState.story_content.StoryBlueprintBlock.structure.numberOfScenes, storyState.story_content.CharacterBlock.character_details);
+        generateAndDisplayScene(1, storyState.story_content.StoryBlueprintBlock.structure.numberOfScenes, storyState.story_content.CharacterBlock.character_details);
       }, 1500);
     }
-  }, [hasBlueprintData, storyState]);
+  }, [hasBlueprintData, hasHeroData, storyState]);
 
 
   if (!hasHeroData) {
     setSharedResponse("It seems our story's hero or blueprint is not yet forged! Please return to the 'Forge Hero' tab to begin your adventure.");
     return null;
   }
-  
+
   if (isGeneratingBlueprint) {
     return (
       <div className="h-full w-full flex flex-col justify-end p-8 text-center text-stone-300">
@@ -103,7 +103,7 @@ export default function SpinTale({ storyState, setStoryState, setActiveTab, setS
       </div>
     );
   }
-  
+
   if (!hasBlueprintData) {
     // This state is now handled by the isGeneratingBlueprint check above.
     // This return is a safety net but should not be reached with the fix.
@@ -122,39 +122,39 @@ export default function SpinTale({ storyState, setStoryState, setActiveTab, setS
 
   return (
     <div className="h-full w-full flex flex-col justify-end p-8">
-        {!currentScene ? (
-            <div className="text-center text-stone-300">
-                <p>Preparing to spin the tale...</p>
-            </div>
-        ) : (
-            <div className="w-full max-w-md mx-auto space-y-4">
-                <div className="bg-black/20 backdrop-blur-sm border border-stone-500/50 rounded-lg p-4 text-stone-200 text-center mb-4">
-                  <h3 className="text-xl font-bold" style={{ fontFamily: 'Cinzel, serif' }}>{currentScene.scene_title}</h3>
-                  <p className="mt-2 text-stone-300">{currentScene.scene_full_text}</p>
-                </div>
-                <button 
-                  onClick={() => {
-                    const nextSceneIndex = currentSceneIndex + 1;
-                    if (nextSceneIndex < totalScenes) {
-                      setCurrentSceneIndex(nextSceneIndex);
-                      generateAndDisplayScene(nextSceneIndex + 1, totalScenes, hero);
-                    } else {
-                      setActiveTab(2); 
-                    }
-                  }} 
-                  className={choiceButtonStyle}
-                  disabled={isLoading}
-                >
-                  Yes, this scene is perfect!
-                </button>
-                <button 
-                  className={choiceButtonStyle}
-                  disabled={isLoading}
-                >
-                  Not quite, let’s refine this scene.
-                </button>
-            </div>
-        )}
+      {!currentScene ? (
+        <div className="text-center text-stone-300">
+          <p>Preparing to spin the tale...</p>
+        </div>
+      ) : (
+        <div className="w-full max-w-md mx-auto space-y-4">
+          <div className="bg-black/20 backdrop-blur-sm border border-stone-500/50 rounded-lg p-4 text-stone-200 text-center mb-4">
+            <h3 className="text-xl font-bold" style={{ fontFamily: 'Cinzel, serif' }}>{currentScene.scene_title}</h3>
+            <p className="mt-2 text-stone-300">{currentScene.scene_full_text}</p>
+          </div>
+          <button
+            onClick={() => {
+              const nextSceneIndex = currentSceneIndex + 1;
+              if (nextSceneIndex < totalScenes) {
+                setCurrentSceneIndex(nextSceneIndex);
+                generateAndDisplayScene(nextSceneIndex + 1, totalScenes, hero);
+              } else {
+                setActiveTab(2);
+              }
+            }}
+            className={choiceButtonStyle}
+            disabled={isLoading}
+          >
+            Yes, this scene is perfect!
+          </button>
+          <button
+            className={choiceButtonStyle}
+            disabled={isLoading}
+          >
+            Not quite, let’s refine this scene.
+          </button>
+        </div>
+      )}
     </div>
   );
 }
