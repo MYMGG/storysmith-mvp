@@ -35,3 +35,19 @@ Purpose: Track changes and redactions made to the StorySmith spec suite.
 - **Commit SHA**: 56a0e7d
 - **Risk**: Low (documentation only)
 - **Rollback**: Delete docs/specs/storysmith-task-map-v3.0.md
+
+---
+
+## [2026-01-21] TS-001 Decision: Persistence = localStorage
+- **Date**: 2026-01-21
+- **Change Summary**: Locked Q2 Open Unknown — Persistence Strategy. Decision: localStorage (browser-only) for MVP.
+- **Spec IDs affected**: TS-001, §10 Q2
+- **Repo paths affected**: docs/specs/storysmith-task-map-v3.0.md (updated TS-001)
+- **Decision Details**:
+  - **Choice**: (A) localStorage
+  - **Why**: MVP speed, no auth/DB infrastructure required, reduces complexity
+  - **Scope**: Viewer and act flows store StoryState locally per book/session_id
+  - **Risks**: Clearing storage loses progress; no cross-device resume
+  - **Follow-up**: Revisit when shipping multi-device resume (Phase 5)
+- **Risk**: Low (documentation only)
+- **Rollback**: Revert TS-001 section in task map
