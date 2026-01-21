@@ -199,11 +199,12 @@ This document maps the canonical spec (`storysmith-composite-baseline-v3.0-redac
 - **FilesLikelyTouched**:
   - `components/SpinTale.js`
 - **AcceptanceCriteria**:
-  - [ ] File upload input on Act II start
-  - [ ] Validates uploaded bundle
-  - [ ] Populates StoryState with `CharacterBlock` from bundle
-  - [ ] Shows error for invalid bundles
-- **Verification**: Export from Act I → Import to Act II → Hero data visible
+  - [x] File upload input on Act II start
+  - [x] Validates uploaded bundle
+  - [x] Populates StoryState with `CharacterBlock` from bundle
+  - [x] Shows error for invalid bundles
+- **Verification**: Export from Act I → Import to Act II → Hero data visible (Verified 2026-01-21)
+- **Status**: COMPLETE (2026-01-21)
 - **Risk/Notes**:
   - UX: consider drag-drop support
 

@@ -146,3 +146,23 @@ Purpose: Track changes and redactions made to the StorySmith spec suite.
 - **Risk**: Low (fix for existing bug)
 - **Rollback**: Revert pages/index.js changes.
 
+
+
+## [2026-01-21] TS-007 Implementation: Act II Import UI
+- **Date**: 2026-01-21
+- **Change Summary**: Implemented "Import Hero Bundle" UI in SpinTale (Act II) to support handoff from Act I.
+- **Spec IDs affected**: TS-007
+- **Repo paths affected**:
+  - components/SpinTale.js
+  - docs/specs/storysmith-task-map-v3.0.md (updated TS-007 status)
+- **Implementation Details**:
+  - Modified `components/SpinTale.js` to render import UI when `!hasHeroData`.
+  - Integrated `lib/bundleImporter.js` for validation and state hydration.
+  - Implemented file upload input accepting `.json`.
+  - Added user-friendly error feedback.
+- **Verification**:
+  - `npm run build`: PASS
+  - Forbidden string scan: CLEAN
+  - Manual verification: Verified UI presence and input logic in browser environment.
+- **Risk**: Low (UI addition only, no core logic changes)
+- **Rollback**: Revert components/SpinTale.js changes.

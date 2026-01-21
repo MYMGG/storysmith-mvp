@@ -1,11 +1,13 @@
 // components/SpinTale.js
 
 import { useState, useEffect } from 'react';
+import { importBundle } from '../lib/bundleImporter';
 
 export default function SpinTale({ storyState, setStoryState, setActiveTab, setSharedResponse, isLoading, isImageLoading }) {
   const [currentSpinTaleStep, setCurrentSpinTaleStep] = useState(0);
   const [currentSceneIndex, setCurrentSceneIndex] = useState(0);
   const [isGeneratingBlueprint, setIsGeneratingBlueprint] = useState(false);
+  const [importError, setImportError] = useState(null);
 
   const hasBlueprintData = storyState.story_content?.StoryBlueprintBlock?.structure?.numberOfScenes > 0;
   const hasHeroData = storyState.story_content?.CharacterBlock?.character_details?.name;
@@ -97,9 +99,72 @@ export default function SpinTale({ storyState, setStoryState, setActiveTab, setS
   }, [hasBlueprintData, storyState]);
 
 
+  const handleFileUpload = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    setImportError(null);
+    setSharedResponse("Reviewing the hero's chronicles...");
+
+    try {
+      const result = await importBundle(file, 'Part1');
+      if (result.success) {
+        setStoryState(result.storyState);
+        setSharedResponse("Ah, a new hero arrives! Let us begin their tale.");
+      } else {
+        setImportError(result.errors.join('\n'));
+        setSharedResponse("Alas, this scroll seems illegible. Please try another.");
+      }
+    } catch (err) {
+      console.error("Import failed:", err);
+      setImportError("An unexpected error occurred.");
+    }
+  };
+
   if (!hasHeroData) {
-    setSharedResponse("It seems our story's hero or blueprint is not yet forged! Please return to the 'Forge Hero' tab to begin your adventure.");
-    return null;
+    return (
+      <div className="h-full w-full flex flex-col items-center justify-center p-8 text-center space-y-6">
+        <h2 className="text-3xl font-bold text-stone-100" style={{ fontFamily: 'Cinzel, serif' }}>
+          Begin Act II: SpinTale
+        </h2>
+
+        <div className="max-w-md w-full bg-black/40 backdrop-blur-md border border-stone-600 rounded-xl p-6 shadow-2xl">
+          <p className="text-stone-300 mb-6">
+            To continue the adventure, please present your Hero Bundle from Act I.
+          </p>
+
+          <div className="space-y-4">
+            <label className="block w-full cursor-pointer group">
+              <div className="w-full flex items-center justify-center px-6 py-4 border-2 border-dashed border-stone-600 rounded-lg group-hover:border-amber-500/50 transition-colors">
+                <div className="space-y-1 text-center">
+                  <svg className="mx-auto h-12 w-12 text-stone-400 group-hover:text-amber-500 transition-colors" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                    <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                  <div className="text-sm text-stone-300">
+                    <span className="font-medium text-amber-500 group-hover:text-amber-400">Upload a file</span>
+                    <span className="pl-1">or drag and drop</span>
+                  </div>
+                  <p className="text-xs text-stone-500">.json files only</p>
+                </div>
+              </div>
+              <input
+                type="file"
+                className="hidden"
+                accept=".json"
+                onChange={handleFileUpload}
+              />
+            </label>
+
+            {importError && (
+              <div className="p-3 bg-red-900/30 border border-red-800 rounded text-red-200 text-sm">
+                <p className="font-bold">Import Failed</p>
+                <p>{importError}</p>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
   }
 
   if (isGeneratingBlueprint) {
