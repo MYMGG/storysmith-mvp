@@ -51,3 +51,21 @@ Purpose: Track changes and redactions made to the StorySmith spec suite.
   - **Follow-up**: Revisit when shipping multi-device resume (Phase 5)
 - **Risk**: Low (documentation only)
 - **Rollback**: Revert TS-001 section in task map
+
+---
+
+## [2026-01-21] Bundle Handoff Plan Drafted
+- **Date**: 2026-01-21
+- **Change Summary**: Created bundle handoff implementation plan covering export/import for Acts I→II→III.
+- **Spec IDs affected**: TS-004, TS-005, TS-006, TS-007, TS-009, TS-010, TS-013
+- **Repo paths affected**:
+  - docs/specs/storysmith-bundle-handoff-plan-v3.0.md (NEW)
+  - docs/specs/storysmith-task-map-v3.0.md (updated TS-004, TS-005 with plan references)
+- **Plan Contents**:
+  - JSON envelope structures for Part1, Part2, Final bundles
+  - Validation rules and required fields per bundle type
+  - Error messaging UX specifications
+  - UI touchpoints (export buttons, import zones)
+  - File paths for implementation utilities
+- **Risk**: Low (documentation only, no code changes)
+- **Rollback**: Delete handoff plan file, revert task map changes
