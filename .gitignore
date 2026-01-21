@@ -33,3 +33,6 @@ _snapshots/
 session_log/
 docs/specs/_backups/
 .gitignore.bak_*
+
+# Backup artifacts
+*.bak_*

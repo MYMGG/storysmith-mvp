@@ -1,0 +1,81 @@
+{
+    "id": "sample",
+    "title": "The Brave Little Hero",
+    "author": "StorySmith",
+    "pages": [
+        {
+            "id": "cover",
+            "type": "cover",
+            "imageUrl": "/books/sample/cover.svg",
+            "text": "The Brave Little Hero",
+            "textPosition": "center",
+            "hotspots": []
+        },
+        {
+            "id": "page-1",
+            "type": "spread",
+            "imageUrl": "/books/sample/page-1.svg",
+            "text": "Once upon a time, in a land far away, a hero was born from the starlight.",
+            "hotspots": [
+                {
+                    "id": "h1",
+                    "type": "reveal",
+                    "label": "Inspect Glyph",
+                    "rect": {
+                        "x": 0.62,
+                        "y": 0.58,
+                        "w": 0.08,
+                        "h": 0.12
+                    },
+                    "content": "An ancient glyph glows with ethereal light. Legends speak of its power to unlock hidden paths through the realm."
+                },
+                {
+                    "id": "h2",
+                    "type": "collect",
+                    "label": "Star Shard",
+                    "flag": "has_star_shard",
+                    "rect": {
+                        "x": 0.18,
+                        "y": 0.62,
+                        "w": 0.07,
+                        "h": 0.10
+                    },
+                    "content": "You've collected the Star Shard! Its gentle warmth fills you with courage."
+                },
+                {
+                    "id": "h3",
+                    "type": "choice",
+                    "label": "Mysterious Path",
+                    "rect": {
+                        "x": 0.44,
+                        "y": 0.70,
+                        "w": 0.08,
+                        "h": 0.12
+                    },
+                    "choices": [
+                        {
+                            "label": "Approach the Light",
+                            "flag": "approached_light",
+                            "result": "You step closer to the shimmering light. It reveals a hidden passage leading deeper into the forest."
+                        },
+                        {
+                            "label": "Hide and Observe",
+                            "flag": "hid_and_observed",
+                            "result": "You duck behind a tree and watch. The light pulses rhythmically, as if calling to you."
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "tableOfContents": [
+        {
+            "id": "cover",
+            "title": "Cover"
+        },
+        {
+            "id": "page-1",
+            "title": "Chapter 1"
+        }
+    ]
+}
