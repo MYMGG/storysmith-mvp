@@ -69,3 +69,22 @@ Purpose: Track changes and redactions made to the StorySmith spec suite.
   - File paths for implementation utilities
 - **Risk**: Low (documentation only, no code changes)
 - **Rollback**: Delete handoff plan file, revert task map changes
+
+---
+
+## [2026-01-21] TS-003 Decision: PromptTree = Stress-Test Only
+- **Date**: 2026-01-21
+- **Change Summary**: Locked Q4 Open Unknown — PromptTree Integration. Decision: (C) stress-test only for MVP.
+- **Spec IDs affected**: TS-003, §7 PromptTree, §10 Q4
+- **Repo paths affected**:
+  - docs/specs/storysmith-task-map-v3.0.md (updated TS-003)
+  - docs/specs/decisions/TS-003-prompttree-integration.md (NEW)
+- **Decision Details**:
+  - **Choice**: (C) stress-test only
+  - **Why**: Reduces implementation risk; current code is template-based; revisit after MVP
+  - **Scope**: No production prompt construction change; PromptTree optional QA tool
+  - **Alternatives Considered**: (A) replace templates, (B) translate to templates
+  - **Revisit Trigger**: After TS-002 bundle handoff + canonical StoryState contracts complete
+- **Impact**: No production prompt construction change; PromptTree serves as optional QA tool
+- **Risk**: Low (documentation only)
+- **Rollback**: Revert TS-003 section in task map, delete decision record

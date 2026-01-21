@@ -89,20 +89,29 @@ This document maps the canonical spec (`storysmith-composite-baseline-v3.0-redac
 
 ---
 
-### TS-003: DECISION — PromptTree Integration
+### TS-003: DECISION — PromptTree Integration ✅ COMPLETE
 - **Title**: Decide PromptTree usage stance
 - **Priority**: P2
 - **DependsOn**: None
 - **SpecRefs**: §7 PromptTree, §10 Open Questions Q4
 - **FilesLikelyTouched**: docs/specs/ (decision record only)
+- **Decision**: **(C) stress-test only for MVP**
+- **Scope**: PromptTree used as QA/stress-test harness only; no runtime dependency
+- **Rationale**:
+  - Keep plain-text templates as production source of truth
+  - Use PromptTree to validate constraint coverage and stress-test prompt assembly
+  - Defer translation/replacement until post-MVP after contracts + bundle handoff stabilize
+  - Reduces implementation risk during critical MVP phase
 - **AcceptanceCriteria**:
-  - [ ] Document chosen option: (A) replace templates, (B) translate to templates, (C) stress-test only
-  - [ ] Record rationale
-  - [ ] Update delta log with decision
-- **Verification**: Review decision document
+  - [x] Document chosen option: (C) stress-test only
+  - [x] Record rationale
+  - [x] Update delta log with decision
+- **Verification**: Decision documented in task map, delta log, and decision record
+- **Status**: COMPLETE (2026-01-21)
+- **DecisionRecord**: docs/specs/decisions/TS-003-prompttree-integration.md
 - **Risk/Notes**:
   - Current implementation uses plain-text templates
-  - Recommend: (C) stress-test only for MVP
+  - Revisit trigger: after TS-002 bundle handoff + canonical StoryState contracts are complete
 
 ---
 
