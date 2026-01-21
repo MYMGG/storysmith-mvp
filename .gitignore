@@ -24,3 +24,5 @@ firebase-debug.*
 *.swp
 .idea
 .vscode
+
+docs/_incoming/
