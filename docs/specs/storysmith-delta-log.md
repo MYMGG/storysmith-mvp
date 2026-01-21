@@ -23,3 +23,15 @@ Purpose: Track changes and redactions made to the StorySmith spec suite.
 - **Repo paths affected**: docs/specs/storysmith-composite-baseline-v3.0-redacted.md, docs/specs/storysmith-baseline-template-v3.0-redacted.md
 - **Risk**: Low
 - **Rollback**: Delete created files.
+
+---
+
+## [2026-01-21] Task Map Creation
+- **Date**: 2026-01-21
+- **Change Summary**: Created implementation task map (storysmith-task-map-v3.0.md) mapping canonical spec to codebase. No app code changed.
+- **Spec IDs affected**: All (TS-001 through TS-016 defined)
+- **Repo paths affected**: docs/specs/storysmith-task-map-v3.0.md (NEW)
+- **Branch**: feature/html-book-viewer
+- **Commit SHA**: 56a0e7d
+- **Risk**: Low (documentation only)
+- **Rollback**: Delete docs/specs/storysmith-task-map-v3.0.md
