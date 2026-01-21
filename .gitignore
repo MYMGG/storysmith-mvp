@@ -1,4 +1,4 @@
-# Next.js build output
+﻿# Next.js build output
 .next
 out
 
@@ -26,3 +26,10 @@ firebase-debug.*
 .vscode
 
 docs/_incoming/
+
+# Local artifacts (do not commit)
+.agent/
+_snapshots/
+session_log/
+docs/specs/_backups/
+.gitignore.bak_*
