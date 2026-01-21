@@ -111,15 +111,16 @@ This document maps the canonical spec (`storysmith-composite-baseline-v3.0-redac
 - **Priority**: P0
 - **DependsOn**: TS-001
 - **SpecRefs**: §3 Act Flows (outputs), §8 Deliverables
+- **DetailedPlan**: See `docs/specs/storysmith-bundle-handoff-plan-v3.0.md` §1, §4.1
 - **FilesLikelyTouched**:
   - `lib/bundleExporter.js` (NEW)
   - `lib/storyState.js` (extend if needed)
 - **AcceptanceCriteria**:
   - [ ] `exportBundle(storyState, bundleType)` returns downloadable JSON
   - [ ] Supports Part1, Part2, Final bundle types
-  - [ ] Uses canonical `StoryState` wrapper format
+  - [ ] Uses canonical `StoryState` wrapper format per handoff plan
   - [ ] Filename matches spec: `MyHeroAssetBundle_Part1.json`, etc.
-- **Verification**: `npm run build` passes; unit test exports valid JSON
+- **Verification**: `npm run build` passes; exported JSON matches handoff plan schema
 - **Risk/Notes**:
   - Foundation for all handoff tasks
 
@@ -130,14 +131,17 @@ This document maps the canonical spec (`storysmith-composite-baseline-v3.0-redac
 - **Priority**: P0
 - **DependsOn**: TS-004
 - **SpecRefs**: §3 Act Flows (inputs), §5 Data Contracts
+- **DetailedPlan**: See `docs/specs/storysmith-bundle-handoff-plan-v3.0.md` §2, §4.1
 - **FilesLikelyTouched**:
   - `lib/bundleImporter.js` (NEW)
+  - `lib/bundleValidator.js` (NEW)
   - `lib/storyState.js` (validation)
 - **AcceptanceCriteria**:
   - [ ] `importBundle(file)` parses and validates JSON
   - [ ] Returns normalized `StoryState` via `normalizeToStoryState()`
   - [ ] Handles `SessionState` alias mapping
-  - [ ] Rejects invalid bundles with clear error
+  - [ ] Rejects invalid bundles with error messages per handoff plan §2.3
+- **Verification**: `npm run build` passes; import rejects invalid bundles correctly
 - **Verification**: `npm run build` passes; unit test imports sample bundle
 - **Risk/Notes**:
   - Must handle legacy formats gracefully
