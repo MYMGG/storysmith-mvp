@@ -107,3 +107,27 @@ Purpose: Track changes and redactions made to the StorySmith spec suite.
 - **Impact**: No PDF export capability in MVP; HTML e-book viewer is primary deliverable
 - **Risk**: Low (documentation only)
 - **Rollback**: Revert TS-002 section in task map, delete decision record
+
+---
+
+## [2026-01-21] TS-004 Implementation: Bundle Export Utility
+- **Date**: 2026-01-21
+- **Change Summary**: Implemented bundle export utility per handoff plan spec.
+- **Spec IDs affected**: TS-004
+- **Repo paths affected**:
+  - lib/bundleExporter.js (NEW)
+  - scripts/sanity-bundle-export.mjs (NEW)
+  - docs/specs/storysmith-task-map-v3.0.md (updated TS-004 status)
+- **Implementation Details**:
+  - `exportBundle(storyState, bundleType)` returns `{ filename, mime, jsonString, object }`
+  - Supports Part1, Part2, Final bundle types
+  - Validates storyState per bundle type requirements
+  - Normalizes legacy input via `normalizeToStoryState()`
+  - Filenames: `MyHeroAssetBundle_Part1.json`, `MyStoryAssetBundle_Part2.json`, `MyStoryAssetBundle_Final.json`
+- **Verification**:
+  - `npm run build`: PASS
+  - Sanity test script: PASS
+  - Forbidden string scan: CLEAN
+- **Risk**: Low (library-only, no UI changes)
+- **Rollback**: Delete lib/bundleExporter.js, scripts/sanity-bundle-export.mjs, revert task map changes
+

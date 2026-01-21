@@ -125,7 +125,7 @@ This document maps the canonical spec (`storysmith-composite-baseline-v3.0-redac
 
 ---
 
-### TS-004: Implement Bundle Export Utility
+### TS-004: Implement Bundle Export Utility ✅ COMPLETE
 - **Title**: Create reusable bundle export function
 - **Priority**: P0
 - **DependsOn**: TS-001
@@ -135,11 +135,12 @@ This document maps the canonical spec (`storysmith-composite-baseline-v3.0-redac
   - `lib/bundleExporter.js` (NEW)
   - `lib/storyState.js` (extend if needed)
 - **AcceptanceCriteria**:
-  - [ ] `exportBundle(storyState, bundleType)` returns downloadable JSON
-  - [ ] Supports Part1, Part2, Final bundle types
-  - [ ] Uses canonical `StoryState` wrapper format per handoff plan
-  - [ ] Filename matches spec: `MyHeroAssetBundle_Part1.json`, etc.
+  - [x] `exportBundle(storyState, bundleType)` returns downloadable JSON
+  - [x] Supports Part1, Part2, Final bundle types
+  - [x] Uses canonical `StoryState` wrapper format per handoff plan
+  - [x] Filename matches spec: `MyHeroAssetBundle_Part1.json`, etc.
 - **Verification**: `npm run build` passes; exported JSON matches handoff plan schema
+- **Status**: COMPLETE (2026-01-21)
 - **Risk/Notes**:
   - Foundation for all handoff tasks
 
