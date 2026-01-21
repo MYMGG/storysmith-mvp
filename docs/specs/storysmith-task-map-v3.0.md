@@ -72,20 +72,30 @@ This document maps the canonical spec (`storysmith-composite-baseline-v3.0-redac
 
 ---
 
-### TS-002: DECISION — PDF Export Strategy
+### TS-002: DECISION — PDF Export Strategy ✅ COMPLETE
 - **Title**: Decide PDF generation approach
 - **Priority**: P1
 - **DependsOn**: None
 - **SpecRefs**: §10 Open Questions Q3, §8 Deliverables
 - **FilesLikelyTouched**: docs/specs/ (decision record only)
+- **Decision**: **(C) defer to post-MVP**
+- **Scope**: PDF export not included in MVP; prioritize HTML viewer and bundle handoff
+- **Rationale**:
+  - MVP timeline is tight; PDF adds significant complexity
+  - HTML e-book viewer (TS-014) satisfies core "readable book" deliverable
+  - Server-side Puppeteer requires infrastructure changes
+  - Client-side @react-pdf/renderer has bundle size and layout limitations
+  - Defer until TS-013 (Final Export) and TS-014 (Viewer Integration) are stable
 - **AcceptanceCriteria**:
-  - [ ] Document chosen option: (A) client-side @react-pdf/renderer, (B) server-side Puppeteer, (C) defer to post-MVP
-  - [ ] Record trade-offs
-  - [ ] Update delta log with decision
-- **Verification**: Review decision document
+  - [x] Document chosen option: (C) defer to post-MVP
+  - [x] Record trade-offs
+  - [x] Update delta log with decision
+- **Verification**: Decision documented in task map, delta log, and decision record
+- **Status**: COMPLETE (2026-01-21)
+- **DecisionRecord**: docs/specs/decisions/TS-002-pdf-export-strategy.md
 - **Risk/Notes**:
   - Server-side requires infra changes
-  - Recommend: (C) defer to post-MVP for faster shipping
+  - Revisit trigger: after TS-013 Final Export + TS-014 Viewer Integration complete
 
 ---
 
