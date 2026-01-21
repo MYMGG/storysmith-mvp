@@ -181,11 +181,12 @@ This document maps the canonical spec (`storysmith-composite-baseline-v3.0-redac
   - [x] Downloads `MyHeroAssetBundle_Part1.json`
   - [x] Bundle contains `StoryState` with `CharacterBlock` populated
   - [x] Bundle passes `isValidStoryState()` check
-- **Verification**: Complete Act I flow; JSON structure matches handoff plan
+- **Verification**: Complete Act I flow; JSON structure matches handoff plan; Manual export verified (2026-01-21)
 - **Status**: COMPLETE (2026-01-21)
 - **MergedPR**: #13
 - **Risk/Notes**:
   - Added step 4 completion screen with export + continue buttons
+  - Fixed "Missing CharacterBlock" error by initializing valid StoryState in pages/index.js
 
 ---
 
@@ -396,6 +397,11 @@ TS-003 (PromptTree Decision) → [No dependent tasks in MVP]
 ---
 
 ## D) How to Run Tasks With AntiGravity
+
+### Definition of Done
+- **Manual Test Policy**: For any task requiring a "Manual Test" step:
+  - If the manual test is NOT executed successfully, the task status MUST be "Blocked/Failing" and NOT "Complete".
+  - "Complete" status requires successful verification of all acceptance criteria, including manual steps.
 
 ### User Message Format
 ```

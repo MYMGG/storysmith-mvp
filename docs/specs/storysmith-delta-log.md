@@ -131,3 +131,18 @@ Purpose: Track changes and redactions made to the StorySmith spec suite.
 - **Risk**: Low (library-only, no UI changes)
 - **Rollback**: Delete lib/bundleExporter.js, scripts/sanity-bundle-export.mjs, revert task map changes
 
+---
+
+## [2026-01-21] TS-006 Fix: Export Bundle Failure
+- **Date**: 2026-01-21
+- **Change Summary**: Fixed "Missing CharacterBlock" error in manual export test.
+- **Spec IDs affected**: TS-006
+- **Repo paths affected**: pages/index.js
+- **Fix Details**:
+  - Updated `initialStoryState` to use `createEmptyStoryState` factory.
+  - Ensures initial state includes `version` and `metadata` required for `isValidStoryState(input)`.
+  - Prevents `normalizeToStoryState` from wiping content during export.
+- **Verification**: Browser automation test passed; manual export successful without errors.
+- **Risk**: Low (fix for existing bug)
+- **Rollback**: Revert pages/index.js changes.
+
