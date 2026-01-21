@@ -146,7 +146,7 @@ This document maps the canonical spec (`storysmith-composite-baseline-v3.0-redac
 
 ---
 
-### TS-005: Implement Bundle Import Utility
+### TS-005: Implement Bundle Import Utility ✅ COMPLETE
 - **Title**: Create reusable bundle import function
 - **Priority**: P0
 - **DependsOn**: TS-004
@@ -157,18 +157,19 @@ This document maps the canonical spec (`storysmith-composite-baseline-v3.0-redac
   - `lib/bundleValidator.js` (NEW)
   - `lib/storyState.js` (validation)
 - **AcceptanceCriteria**:
-  - [ ] `importBundle(file)` parses and validates JSON
-  - [ ] Returns normalized `StoryState` via `normalizeToStoryState()`
-  - [ ] Handles `SessionState` alias mapping
-  - [ ] Rejects invalid bundles with error messages per handoff plan §2.3
-- **Verification**: `npm run build` passes; import rejects invalid bundles correctly
-- **Verification**: `npm run build` passes; unit test imports sample bundle
+  - [x] `importBundle(file)` parses and validates JSON
+  - [x] Returns normalized `StoryState` via `normalizeToStoryState()`
+  - [x] Handles `SessionState` alias mapping
+  - [x] Rejects invalid bundles with error messages per handoff plan §2.3
+- **Verification**: `npm run build` passes; bundle validation tested via sanity script
+- **Status**: COMPLETE (2026-01-21)
+- **MergedPR**: #12
 - **Risk/Notes**:
-  - Must handle legacy formats gracefully
+  - Legacy format migration supported via `migrateLegacyBundle()`
 
 ---
 
-### TS-006: Add Export Button to ForgeHero (Act I)
+### TS-006: Add Export Button to ForgeHero (Act I) ✅ COMPLETE
 - **Title**: Add "Export Hero Bundle" UI to Act I
 - **Priority**: P0
 - **DependsOn**: TS-004
@@ -176,13 +177,15 @@ This document maps the canonical spec (`storysmith-composite-baseline-v3.0-redac
 - **FilesLikelyTouched**:
   - `components/ForgeHero.js`
 - **AcceptanceCriteria**:
-  - [ ] Button visible after hero creation complete
-  - [ ] Downloads `MyHeroAssetBundle_Part1.json`
-  - [ ] Bundle contains `StoryState` with `CharacterBlock` populated
-  - [ ] Bundle passes `isValidStoryState()` check
-- **Verification**: Complete Act I flow; verify downloaded JSON structure
+  - [x] Button visible after hero creation complete
+  - [x] Downloads `MyHeroAssetBundle_Part1.json`
+  - [x] Bundle contains `StoryState` with `CharacterBlock` populated
+  - [x] Bundle passes `isValidStoryState()` check
+- **Verification**: Complete Act I flow; JSON structure matches handoff plan
+- **Status**: COMPLETE (2026-01-21)
+- **MergedPR**: #13
 - **Risk/Notes**:
-  - Requires state tracking for "hero complete" status
+  - Added step 4 completion screen with export + continue buttons
 
 ---
 
