@@ -88,3 +88,22 @@ Purpose: Track changes and redactions made to the StorySmith spec suite.
 - **Impact**: No production prompt construction change; PromptTree serves as optional QA tool
 - **Risk**: Low (documentation only)
 - **Rollback**: Revert TS-003 section in task map, delete decision record
+
+---
+
+## [2026-01-21] TS-002 Decision: PDF Export = Defer to Post-MVP
+- **Date**: 2026-01-21
+- **Change Summary**: Locked Q3 Open Unknown — PDF Export Strategy. Decision: (C) defer to post-MVP.
+- **Spec IDs affected**: TS-002, TS-016, §10 Q3, §8 Deliverables
+- **Repo paths affected**:
+  - docs/specs/storysmith-task-map-v3.0.md (updated TS-002)
+  - docs/specs/decisions/TS-002-pdf-export-strategy.md (NEW)
+- **Decision Details**:
+  - **Choice**: (C) defer to post-MVP
+  - **Why**: MVP timeline tight; HTML viewer satisfies core deliverable; PDF adds complexity
+  - **Scope**: No PDF export in MVP; TS-016 remains post-MVP
+  - **Alternatives Considered**: (A) client-side @react-pdf/renderer, (B) server-side Puppeteer
+  - **Revisit Trigger**: After TS-013 Final Export + TS-014 Viewer Integration complete
+- **Impact**: No PDF export capability in MVP; HTML e-book viewer is primary deliverable
+- **Risk**: Low (documentation only)
+- **Rollback**: Revert TS-002 section in task map, delete decision record
