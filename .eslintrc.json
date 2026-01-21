@@ -1,13 +1,5 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  // ← existing config you already have…
-  eslint: {
-    // disables ESLint errors stopping production builds
-    ignoreDuringBuilds: true
-  },
-  // you can keep any other settings below
-  // images: { domains: [...] },
-  // rewrites() { ... },
-};
-
-module.exports = nextConfig;
+{
+  "extends": [
+    "next/core-web-vitals"
+  ]
+}
