@@ -50,20 +50,25 @@ This document maps the canonical spec (`storysmith-composite-baseline-v3.0-redac
 
 ## B) Task Backlog
 
-### TS-001: DECISION — Persistence Strategy
+### TS-001: DECISION — Persistence Strategy ✅ COMPLETE
 - **Title**: Decide production persistence mechanism
 - **Priority**: P0
 - **DependsOn**: None
 - **SpecRefs**: §10 Open Questions Q2
 - **FilesLikelyTouched**: docs/specs/ (decision record only)
+- **Decision**: **(A) localStorage (browser-only) for MVP**
+- **Scope**: Viewer + act flows store StoryState locally per book/session_id
+- **Risks**:
+  - Clearing browser storage loses all progress
+  - No cross-device resume capability
+  - Storage limits (~5MB per origin)
+- **Deferred**: Phase 5 server-side persistence (Firebase/Supabase) for multi-device sync
 - **AcceptanceCriteria**:
-  - [ ] Document chosen option: (A) localStorage only, (B) Firebase Firestore, (C) Supabase
-  - [ ] Record rationale and migration path
-  - [ ] Update delta log with decision
-- **Verification**: Review decision document
-- **Risk/Notes**:
-  - Affects all subsequent persistence tasks
-  - Recommend: (A) localStorage for MVP, defer DB to post-launch
+  - [x] Document chosen option: (A) localStorage only
+  - [x] Record rationale and migration path
+  - [x] Update delta log with decision
+- **Verification**: Decision documented in task map and delta log
+- **Status**: COMPLETE (2026-01-21)
 
 ---
 
