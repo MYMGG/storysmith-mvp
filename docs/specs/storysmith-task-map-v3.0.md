@@ -195,6 +195,7 @@ This document maps the canonical spec (`storysmith-composite-baseline-v3.0-redac
 - **Priority**: P0
 - **DependsOn**: TS-005, TS-006
 - **SpecRefs**: §3 Act II inputs
+- **DetailedPlan**: See `docs/specs/plans/TS-007-spintale-import-ui-plan.md`
 - **FilesLikelyTouched**:
   - `components/SpinTale.js`
 - **AcceptanceCriteria**:
