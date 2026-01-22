@@ -10,6 +10,8 @@ import {
 	Book, Sword, Crown, Scroll, Feather, Mountain, Skull, Tent, Castle, Ship, Gem, Anchor, Gavel, Flame
 } from 'lucide-react';
 import * as projectStore from '../lib/projectStore.js';
+import TranslucentHeader from '../components/TranslucentHeader';
+import ProjectSelector from '../components/ProjectSelector';
 
 // Visual Assets for book covers
 const ICONS = [Book, Sword, Crown, Scroll, Feather, Mountain, Skull, Tent, Castle, Ship, Gem, Anchor, Gavel, Flame];
@@ -127,8 +129,12 @@ export default function ProjectsPage() {
 			<Head>
 				<title>StorySmith - Your Chronicles</title>
 			</Head>
-			<div className="min-h-screen bg-parchment">
-				<div className="px-6 py-12 max-w-7xl mx-auto">
+			<div className="min-h-screen bg-parchment flex flex-col">
+				<TranslucentHeader
+					rightSlot={<ProjectSelector />}
+					onHomeClick={() => router.push('/projects')}
+				/>
+				<div className="flex-1 px-6 py-12 max-w-7xl mx-auto w-full">
 					<h1 className="text-4xl font-heading text-ink mb-2 text-center" style={{ fontFamily: 'Cinzel, serif' }}>
 						The Grand Library
 					</h1>

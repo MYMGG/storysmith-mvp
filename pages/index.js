@@ -30,6 +30,14 @@ export default function Home() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [showLandingPage, setShowLandingPage] = useState(true);
+
+  // Check for existing session
+  useEffect(() => {
+    if (typeof window !== 'undefined' && sessionStorage.getItem('ss_admin_authed_v1') === '1') {
+      setShowLandingPage(false);
+    }
+  }, []);
+
   const [activeTab, setActiveTab] = useState(0);
   const [isVideoFinished, setIsVideoFinished] = useState(false);
   const [storyState, setStoryState] = useState(() => createInitialStoryState());
