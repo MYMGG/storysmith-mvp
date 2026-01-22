@@ -249,7 +249,7 @@ This document maps the canonical spec (`storysmith-composite-baseline-v3.0-redac
 
 ---
 
-### TS-010: Add Import UI to BindBook (Act III)
+### TS-010: Add Import UI to BindBook (Act III) ✅ COMPLETE
 - **Title**: Add "Import Story Bundle" UI to Act III
 - **Priority**: P0
 - **DependsOn**: TS-009
@@ -257,11 +257,12 @@ This document maps the canonical spec (`storysmith-composite-baseline-v3.0-redac
 - **FilesLikelyTouched**:
   - `components/BindBook.js`
 - **AcceptanceCriteria**:
-  - [ ] File upload input on Act III start
-  - [ ] Validates uploaded Part2 bundle
-  - [ ] Populates StoryState with scenes/prompts from bundle
-  - [ ] Shows error for invalid bundles
-- **Verification**: Export from Act II → Import to Act III → Scenes/prompts visible
+  - [x] File upload input on Act III start
+  - [x] Validates uploaded Part2 bundle
+  - [x] Populates StoryState with scenes/prompts from bundle
+  - [x] Shows error for invalid bundles
+- **Verification**: Export from Act II → Import to Act III → Scenes/prompts visible (Verified 2026-01-21)
+- **Status**: COMPLETE (2026-01-21)
 - **Risk/Notes**:
   - UX: show summary of imported content
 
