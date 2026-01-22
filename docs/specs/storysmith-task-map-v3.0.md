@@ -190,7 +190,7 @@ This document maps the canonical spec (`storysmith-composite-baseline-v3.0-redac
 
 ---
 
-### TS-007: Add Import UI to SpinTale (Act II)
+### TS-007: Add Import UI to SpinTale (Act II) ✅ COMPLETE
 - **Title**: Add "Import Hero Bundle" UI to Act II
 - **Priority**: P0
 - **DependsOn**: TS-005, TS-006
@@ -210,7 +210,7 @@ This document maps the canonical spec (`storysmith-composite-baseline-v3.0-redac
 
 ---
 
-### TS-008: Enforce Act II Prompts-Only Pipeline
+### TS-008: Enforce Act II Prompts-Only Pipeline ✅ COMPLETE
 - **Title**: Ensure Act II stores illustration_prompt without generating images
 - **Priority**: P1
 - **DependsOn**: TS-007
@@ -219,17 +219,18 @@ This document maps the canonical spec (`storysmith-composite-baseline-v3.0-redac
   - `pages/api/scene-weaver.js`
   - `components/SpinTale.js`
 - **AcceptanceCriteria**:
-  - [ ] Scene approval stores `illustration_prompt` in `SceneJSON_array[i]`
-  - [ ] `scene_status` set to `pending_illustration`
-  - [ ] NO image generation calls in Act II
-  - [ ] `illustration_url` remains null/empty
-- **Verification**: Complete scene in Act II; verify exported bundle has prompts but no URLs
+  - [x] Scene approval stores `illustration_prompt` in `SceneJSON_array[i]`
+  - [x] `scene_status` set to `pending_illustration`
+  - [x] NO image generation calls in Act II
+  - [x] `illustration_url` remains null/empty
+- **Verification**: Complete scene in Act II; verify exported bundle has prompts but no URLs (Verified 2026-01-21 via TS-009 export)
+- **Status**: COMPLETE (2026-01-21)
 - **Risk/Notes**:
   - May require removing existing image generation calls
 
 ---
 
-### TS-009: Add Export Button to SpinTale (Act II)
+### TS-009: Add Export Button to SpinTale (Act II) ✅ COMPLETE
 - **Title**: Add "Export Story Bundle" UI to Act II
 - **Priority**: P0
 - **DependsOn**: TS-008
@@ -237,11 +238,12 @@ This document maps the canonical spec (`storysmith-composite-baseline-v3.0-redac
 - **FilesLikelyTouched**:
   - `components/SpinTale.js`
 - **AcceptanceCriteria**:
-  - [ ] Button visible after all scenes approved
-  - [ ] Downloads `MyStoryAssetBundle_Part2.json`
-  - [ ] Bundle contains `SceneJSON_array` with prompts
-  - [ ] Bundle contains `cover_image_prompt`
-- **Verification**: Complete Act II flow; verify downloaded JSON structure
+  - [x] Button visible after all scenes approved
+  - [x] Downloads `MyStoryAssetBundle_Part2.json`
+  - [x] Bundle contains `SceneJSON_array` with prompts
+  - [x] Bundle contains `cover_image_prompt`
+- **Verification**: Complete Act II flow; verify downloaded JSON structure (Verified manually 2026-01-21)
+- **Status**: COMPLETE (2026-01-21)
 - **Risk/Notes**:
   - Requires tracking "all scenes complete" status
 
