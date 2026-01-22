@@ -6,6 +6,7 @@ import LandingPage from '../components/LandingPage';
 import ForgeHero from '../components/ForgeHero';
 import SpinTale from '../components/SpinTale';
 import BindBook from '../components/BindBook';
+import BookSpread from '../components/BookSpread';
 import useAdminAuth from '../hooks/useAdminAuth';
 import { createEmptyStoryState } from '../lib/storyState.js';
 
@@ -84,25 +85,57 @@ export default function Home() {
           </div>
         </header>
 
-        <main className="flex-1 flex flex-col md:flex-row gap-8 items-stretch p-8">
-          <div className="relative flex-grow w-full md:w-1/2 min-h-0 rounded-2xl shadow-2xl overflow-hidden">
-            <video
-              key={tabs[activeTab].videoSrc}
-              className="absolute top-0 left-0 w-full h-full object-cover"
-              autoPlay
-              loop
-              muted
-              playsInline
-            >
-              <source src={tabs[activeTab].videoSrc} type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
-          </div>
-          <div className="flex-grow w-full md:w-1/2 flex justify-center items-center">
-            {activeTab === 0 && <ForgeHero storyState={storyState} setStoryState={setStoryState} setActiveTab={setActiveTab} setSharedResponse={setSharedResponse} />}
-            {activeTab === 1 && <SpinTale storyState={storyState} setStoryState={setStoryState} setActiveTab={setActiveTab} setSharedResponse={setSharedResponse} />}
-            {activeTab === 2 && <BindBook storyState={storyState} setStoryState={setStoryState} setActiveTab={setActiveTab} setSharedResponse={setSharedResponse} resetApp={resetApp} />}
-          </div>
+        <main className="flex-1 flex items-center justify-center p-4">
+          {/* Act 1 (Forge): Full-width 2-page book layout */}
+          {activeTab === 0 && (
+            <BookSpread
+              left={
+                <video
+                  key={tabs[activeTab].videoSrc}
+                  className="absolute top-0 left-0 w-full h-full object-cover rounded-lg"
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                >
+                  <source src={tabs[activeTab].videoSrc} type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+              }
+              right={
+                <ForgeHero
+                  embedded
+                  storyState={storyState}
+                  setStoryState={setStoryState}
+                  setActiveTab={setActiveTab}
+                  setSharedResponse={setSharedResponse}
+                  sharedResponse={sharedResponse}
+                />
+              }
+            />
+          )}
+          {/* Act 2 + 3: Original 50/50 layout (to be converted later) */}
+          {activeTab !== 0 && (
+            <div className="flex-1 flex flex-col md:flex-row gap-8 items-stretch w-full max-w-screen-2xl">
+              <div className="relative flex-grow w-full md:w-1/2 min-h-0 rounded-2xl shadow-2xl overflow-hidden">
+                <video
+                  key={tabs[activeTab].videoSrc}
+                  className="absolute top-0 left-0 w-full h-full object-cover"
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                >
+                  <source src={tabs[activeTab].videoSrc} type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+              <div className="flex-grow w-full md:w-1/2 flex justify-center items-center">
+                {activeTab === 1 && <SpinTale storyState={storyState} setStoryState={setStoryState} setActiveTab={setActiveTab} setSharedResponse={setSharedResponse} />}
+                {activeTab === 2 && <BindBook storyState={storyState} setStoryState={setStoryState} setActiveTab={setActiveTab} setSharedResponse={setSharedResponse} resetApp={resetApp} />}
+              </div>
+            </div>
+          )}
         </main>
       </div>
     </div>

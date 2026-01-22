@@ -11,6 +11,7 @@ export default function ForgeHero({
   setActiveTab,
   setSharedResponse,
   sharedResponse,
+  embedded = false,
 }) {
   const [currentForgeHeroStep, setCurrentForgeHeroStep] = useState(0);
   const [currentQuestion, setCurrentQuestion] = useState('start');
@@ -401,6 +402,24 @@ export default function ForgeHero({
     }
   };
 
+  // When embedded in BookSpread, render without outer parchment card styling
+  if (embedded) {
+    return (
+      <div className="w-full h-full flex flex-col" style={{ fontFamily: '"Cinzel", serif', color: '#4f463c' }}>
+        <div
+          id="shared-response-box-parchment"
+          className="w-full text-center text-lg mb-4 p-3 border-b-2 border-leather/30"
+        >
+          {sharedResponse}
+        </div>
+        <div className="flex-1 overflow-y-auto custom-scrollbar pr-2">
+          {renderStepContent()}
+        </div>
+      </div>
+    );
+  }
+
+  // Original standalone rendering with parchment card
   return (
     <div
       className="w-full max-w-lg mx-auto h-full max-h-[80vh] flex flex-col p-8 rounded-lg shadow-2xl"
