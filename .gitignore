@@ -28,7 +28,9 @@ firebase-debug.*
 docs/_incoming/
 
 # Local artifacts (do not commit)
-.agent/
+.agent/*
+!.agent/rules/
+!.agent/rules/storysmith.md
 _snapshots/
 session_log/
 docs/specs/_backups/
