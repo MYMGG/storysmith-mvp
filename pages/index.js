@@ -1,6 +1,7 @@
 // pages/index.js
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import Head from 'next/head';
 import LandingPage from '../components/LandingPage';
 import ForgeHero from '../components/ForgeHero';
@@ -9,6 +10,7 @@ import BindBook from '../components/BindBook';
 import BookSpread from '../components/BookSpread';
 import TranslucentHeader from '../components/TranslucentHeader';
 import ActsBar from '../components/ActsBar';
+import ProjectSelector from '../components/ProjectSelector';
 import useAdminAuth from '../hooks/useAdminAuth';
 import { createEmptyStoryState } from '../lib/storyState.js';
 
@@ -25,6 +27,7 @@ function createInitialStoryState() {
 }
 
 export default function Home() {
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [showLandingPage, setShowLandingPage] = useState(true);
   const [activeTab, setActiveTab] = useState(0);
@@ -41,7 +44,10 @@ export default function Home() {
     adminPasswordInput,
     setAdminPasswordInput,
     handleAdminLogin,
-  } = useAdminAuth(password, () => setShowLandingPage(false));
+  } = useAdminAuth(password, () => {
+    // Redirect to projects page on successful login
+    router.push('/projects');
+  });
 
   // This is the correct array that the application should be using
   const tabs = [
@@ -80,10 +86,12 @@ export default function Home() {
       <div className="absolute inset-0 z-1 bg-black/50" />
 
       <div className="relative z-10 flex flex-col min-h-screen">
-        <TranslucentHeader onHomeClick={resetApp} />
+        <TranslucentHeader onHomeClick={resetApp} rightSlot={<ProjectSelector />} />
 
-        {/* Floating Acts Bar - positioned between header and book */}
-        <ActsBar activeTab={activeTab} setActiveTab={setActiveTab} />
+        {/* Floating Acts Bar - absolute overlay, doesn't affect layout flow */}
+        <div className="absolute left-0 right-0 top-[56px] sm:top-[64px] z-20 pointer-events-none">
+          <ActsBar activeTab={activeTab} setActiveTab={setActiveTab} />
+        </div>
 
         <main className="flex-1 flex items-center justify-center p-4">
           {/* Act 1 (Forge): Full-width 2-page book layout */}

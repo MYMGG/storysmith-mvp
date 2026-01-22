@@ -125,7 +125,7 @@ const BookSpread = forwardRef(function BookSpread({ left, right, leftSubtitle, o
 						</div>
 						{/* Subtitle area under video */}
 						{leftSubtitle && (
-							<div className="mt-2 px-2 py-2 text-center text-sm text-leather/80 font-body leading-relaxed bg-parchment-deep/30 rounded-md max-h-20 overflow-y-auto">
+							<div className="mt-2 px-3 py-2 text-center text-base text-leather font-body leading-relaxed bg-parchment-deep/50 rounded-md max-h-24 overflow-y-auto">
 								{leftSubtitle}
 							</div>
 						)}

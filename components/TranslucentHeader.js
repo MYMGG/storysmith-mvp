@@ -7,38 +7,27 @@ import React from 'react';
 /**
  * TranslucentHeader - Translucent navigation header with blur effect.
  * @param {Object} props
- * @param {Function} props.onHomeClick - Callback when Home/logo is clicked
+ * @param {Function} props.onHomeClick - Callback when logo is clicked
+ * @param {React.ReactNode} [props.rightSlot] - Optional content for right side (e.g. ProjectSelector)
  */
-export default function TranslucentHeader({ onHomeClick }) {
+export default function TranslucentHeader({ onHomeClick, rightSlot }) {
 	return (
 		<header className="w-full border-b border-leather/20 bg-parchment-deep/50 backdrop-blur-sm shadow-sm z-50">
-			<div className="max-w-screen-2xl mx-auto px-8 py-4 flex justify-between items-center">
-				{/* Left: Brand/Logo */}
+			<div className="max-w-screen-2xl mx-auto px-6 py-2 flex justify-between items-center">
+				{/* Left: Brand/Logo - clickable as home */}
 				<h1
-					className="text-4xl sm:text-5xl font-extrabold text-stone-200 cursor-pointer hover:text-white transition-colors"
-					style={{ fontFamily: 'Cinzel, serif', textShadow: '0 0 5px rgba(255, 255, 255, 0.2)' }}
+					className="text-2xl sm:text-3xl font-extrabold text-stone-200 cursor-pointer hover:text-white transition-colors"
+					style={{ fontFamily: 'Cinzel, serif', textShadow: '0 0 4px rgba(255, 255, 255, 0.15)' }}
 					onClick={onHomeClick}
 				>
 					StorySmith
 				</h1>
 
-				{/* Center: Empty slot (ActsBar floats below) */}
+				{/* Center: Empty slot (ActsBar floats as overlay) */}
 				<div className="flex-1" />
 
-				{/* Right: Navigation */}
-				<nav>
-					<ul className="flex space-x-6">
-						<li>
-							<a
-								href="#"
-								onClick={(e) => { e.preventDefault(); onHomeClick?.(); }}
-								className="text-gray-300 hover:text-white transition-colors"
-							>
-								Home
-							</a>
-						</li>
-					</ul>
-				</nav>
+				{/* Right: Optional slot for ProjectSelector or other controls */}
+				{rightSlot && <div>{rightSlot}</div>}
 			</div>
 		</header>
 	);
