@@ -12,6 +12,7 @@ export default function ForgeHero({
   setSharedResponse,
   sharedResponse,
   embedded = false,
+  onAdvance,
 }) {
   const [currentForgeHeroStep, setCurrentForgeHeroStep] = useState(0);
   const [currentQuestion, setCurrentQuestion] = useState('start');
@@ -49,6 +50,7 @@ export default function ForgeHero({
   const handlePhotoFileChange = async (event) => { /* ... */ };
 
   const handleHeroTypeSelection = (type) => {
+    onAdvance?.(); // Trigger flip animation
     setHeroDetails(prev => ({ ...prev, type }));
     if (type === 'real') {
       setCurrentForgeHeroStep(1);
@@ -63,6 +65,7 @@ export default function ForgeHero({
   };
 
   const handleQuestionAnswer = (field, value, nextQuestion) => {
+    onAdvance?.(); // Trigger flip animation
     setHeroDetails(prev => ({ ...prev, [field]: value }));
     setCurrentQuestion(nextQuestion);
   };
@@ -87,6 +90,7 @@ export default function ForgeHero({
   };
 
   const handleForgeHeroSubmit = (details = heroDetails) => {
+    onAdvance?.(); // Trigger flip animation
     const prompt = constructHeroPrompt(details);
     setSharedResponse("Behold, the hero’s face shines with living light!");
     generateRealImage(prompt);

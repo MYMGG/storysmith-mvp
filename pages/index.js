@@ -1,6 +1,6 @@
 // pages/index.js
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import Head from 'next/head';
 import LandingPage from '../components/LandingPage';
 import ForgeHero from '../components/ForgeHero';
@@ -29,6 +29,7 @@ export default function Home() {
   const [isVideoFinished, setIsVideoFinished] = useState(false);
   const [storyState, setStoryState] = useState(() => createInitialStoryState());
   const [sharedResponse, setSharedResponse] = useState("");
+  const bookRef = useRef(null);
   const password = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || '6425';
 
   const {
@@ -89,6 +90,7 @@ export default function Home() {
           {/* Act 1 (Forge): Full-width 2-page book layout */}
           {activeTab === 0 && (
             <BookSpread
+              ref={bookRef}
               left={
                 <video
                   key={tabs[activeTab].videoSrc}
@@ -110,6 +112,7 @@ export default function Home() {
                   setActiveTab={setActiveTab}
                   setSharedResponse={setSharedResponse}
                   sharedResponse={sharedResponse}
+                  onAdvance={() => bookRef.current?.triggerFlip()}
                 />
               }
             />

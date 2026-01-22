@@ -2,7 +2,7 @@
 // Presentational book shell with 2-page spread layout and flip animation
 // Ported from storysmith-v5 BookInterface.tsx (layout only, no API logic)
 
-import { useState } from 'react';
+import { useState, forwardRef, useImperativeHandle } from 'react';
 
 /**
  * BookSpread - A two-page open book layout with flip animation.
@@ -12,9 +12,14 @@ import { useState } from 'react';
  * @param {Function} [props.onFlipStart] - Callback when flip animation starts
  * @param {Function} [props.onFlipEnd] - Callback when flip animation ends
  */
-export default function BookSpread({ left, right, onFlipStart, onFlipEnd }) {
+const BookSpread = forwardRef(function BookSpread({ left, right, onFlipStart, onFlipEnd }, ref) {
 	// Animation state machine: 'idle' | 'fading-out' | 'closing' | 'reset' | 'opening' | 'fading-in-content'
 	const [animState, setAnimState] = useState('idle');
+
+	// Expose triggerFlip to parent via ref
+	useImperativeHandle(ref, () => ({
+		triggerFlip
+	}), [animState]); // Re-create when animState changes to ensure fresh closure
 
 	/**
 	 * Triggers the page flip animation sequence.
@@ -168,4 +173,6 @@ export default function BookSpread({ left, right, onFlipStart, onFlipEnd }) {
       `}</style>
 		</div>
 	);
-}
+});
+
+export default BookSpread;
