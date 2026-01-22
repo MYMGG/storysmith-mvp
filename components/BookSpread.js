@@ -9,10 +9,12 @@ import { useState, forwardRef, useImperativeHandle } from 'react';
  * @param {Object} props
  * @param {React.ReactNode} props.left - Content for the left page (e.g., video)
  * @param {React.ReactNode} props.right - Content for the right page (e.g., ForgeHero)
+ * @param {string|React.ReactNode} [props.leftSubtitle] - Subtitle text under left page content
  * @param {Function} [props.onFlipStart] - Callback when flip animation starts
+ * @param {Function} [props.onFlipMidpoint] - Callback at flip midpoint (content swap point)
  * @param {Function} [props.onFlipEnd] - Callback when flip animation ends
  */
-const BookSpread = forwardRef(function BookSpread({ left, right, onFlipStart, onFlipEnd }, ref) {
+const BookSpread = forwardRef(function BookSpread({ left, right, leftSubtitle, onFlipStart, onFlipMidpoint, onFlipEnd }, ref) {
 	// Animation state machine: 'idle' | 'fading-out' | 'closing' | 'reset' | 'opening' | 'fading-in-content'
 	const [animState, setAnimState] = useState('idle');
 
@@ -38,8 +40,9 @@ const BookSpread = forwardRef(function BookSpread({ left, right, onFlipStart, on
 			setAnimState('closing');
 
 			setTimeout(() => {
-				// THREE: RESET / SWAP Phase (Instant)
+				// THREE: RESET / SWAP Phase (Instant) - Invoke midpoint callback for content swap
 				setAnimState('reset');
+				onFlipMidpoint?.(); // Content should swap here
 
 				// Force a browser repaint before starting the next animation
 				requestAnimationFrame(() => {
@@ -120,6 +123,12 @@ const BookSpread = forwardRef(function BookSpread({ left, right, onFlipStart, on
 								<span className="text-leather/40 font-heading italic">Animated Character</span>
 							)}
 						</div>
+						{/* Subtitle area under video */}
+						{leftSubtitle && (
+							<div className="mt-2 px-2 py-2 text-center text-sm text-leather/80 font-body leading-relaxed bg-parchment-deep/30 rounded-md max-h-20 overflow-y-auto">
+								{leftSubtitle}
+							</div>
+						)}
 						<div className="absolute bottom-4 left-6 text-xs text-leather/40 font-heading">Page 1</div>
 					</div>
 				</div>

@@ -7,6 +7,8 @@ import ForgeHero from '../components/ForgeHero';
 import SpinTale from '../components/SpinTale';
 import BindBook from '../components/BindBook';
 import BookSpread from '../components/BookSpread';
+import TranslucentHeader from '../components/TranslucentHeader';
+import ActsBar from '../components/ActsBar';
 import useAdminAuth from '../hooks/useAdminAuth';
 import { createEmptyStoryState } from '../lib/storyState.js';
 
@@ -30,6 +32,7 @@ export default function Home() {
   const [storyState, setStoryState] = useState(() => createInitialStoryState());
   const [sharedResponse, setSharedResponse] = useState("");
   const bookRef = useRef(null);
+  const pendingAdvanceRef = useRef(null); // Queue for deferred ForgeHero state changes
   const password = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || '6425';
 
   const {
@@ -77,14 +80,10 @@ export default function Home() {
       <div className="absolute inset-0 z-1 bg-black/50" />
 
       <div className="relative z-10 flex flex-col min-h-screen">
-        <header className="bg-transparent py-4">
-          <div className="max-w-screen-2xl mx-auto px-8 flex justify-between items-center">
-            <h1 className="text-4xl sm:text-5xl font-extrabold text-stone-200" style={{ fontFamily: 'Cinzel, serif', textShadow: '0 0 5px rgba(255, 255, 255, 0.2)' }}>
-              StorySmith
-            </h1>
-            <nav><ul className="flex space-x-6"><li><a href="#" onClick={(e) => { e.preventDefault(); resetApp(); }} className="text-gray-300 hover:text-white transition-colors">Home</a></li></ul></nav>
-          </div>
-        </header>
+        <TranslucentHeader onHomeClick={resetApp} />
+
+        {/* Floating Acts Bar - positioned between header and book */}
+        <ActsBar activeTab={activeTab} setActiveTab={setActiveTab} />
 
         <main className="flex-1 flex items-center justify-center p-4">
           {/* Act 1 (Forge): Full-width 2-page book layout */}
@@ -104,6 +103,7 @@ export default function Home() {
                   Your browser does not support the video tag.
                 </video>
               }
+              leftSubtitle={sharedResponse}
               right={
                 <ForgeHero
                   embedded
@@ -112,9 +112,16 @@ export default function Home() {
                   setActiveTab={setActiveTab}
                   setSharedResponse={setSharedResponse}
                   sharedResponse={sharedResponse}
-                  onAdvance={() => bookRef.current?.triggerFlip()}
+                  onAdvanceRequested={(fn) => {
+                    pendingAdvanceRef.current = fn;
+                    bookRef.current?.triggerFlip();
+                  }}
                 />
               }
+              onFlipMidpoint={() => {
+                pendingAdvanceRef.current?.();
+                pendingAdvanceRef.current = null;
+              }}
             />
           )}
           {/* Act 2 + 3: Original 50/50 layout (to be converted later) */}

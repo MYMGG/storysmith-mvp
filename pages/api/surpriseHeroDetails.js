@@ -2,20 +2,25 @@
 
 import OpenAI from 'openai';
 
-if (!process.env.OPENAI_API_KEY) {
-    throw new Error('Missing OPENAI_API_KEY environment variable');
-}
-
-const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-});
+/**
+ * Creates an OpenAI client using the provided API key or falling back to env var.
+ * @param {string|null} apiKey - Optional API key from client request
+ * @returns {OpenAI} OpenAI client instance
+ */
+const getOpenAIClient = (apiKey) => {
+    const finalKey = apiKey || process.env.OPENAI_API_KEY;
+    if (!finalKey) {
+        throw new Error('Missing OPENAI_API_KEY - please set it in Settings or environment variable');
+    }
+    return new OpenAI({ apiKey: finalKey });
+};
 
 export default async function handler(req, res) {
     if (req.method !== 'POST') {
         return res.status(405).json({ message: 'Method Not Allowed' });
     }
 
-    const { heroType } = req.body;
+    const { heroType, apiKey } = req.body;
 
     const prompt = `
 Generate a single, complete hero concept for a children's story. The hero should be a ${heroType} character. The output should be a JSON object with the following keys:
@@ -31,6 +36,7 @@ Ensure the output is a single JSON object with no other text, no code fences, an
 `;
 
     try {
+        const openai = getOpenAIClient(apiKey);
         const chatCompletion = await openai.chat.completions.create({
             model: "gpt-3.5-turbo",
             messages: [{ role: "user", content: prompt }],
