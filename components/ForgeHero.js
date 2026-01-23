@@ -418,7 +418,7 @@ export default function ForgeHero({
   if (embedded) {
     return (
       <div className="w-full h-full flex flex-col" style={{ fontFamily: '"Cinzel", serif', color: '#4f463c' }}>
-        <div className="flex-1 overflow-y-auto custom-scrollbar pr-2">
+        <div className="flex-1 overflow-y-auto custom-scrollbar">
           {renderStepContent()}
         </div>
       </div>

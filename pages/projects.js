@@ -129,194 +129,214 @@ export default function ProjectsPage() {
 			<Head>
 				<title>StorySmith - Your Chronicles</title>
 			</Head>
-			<div className="min-h-screen bg-parchment flex flex-col">
-				<TranslucentHeader
-					rightSlot={<ProjectSelector />}
-					onHomeClick={() => router.push('/projects')}
-				/>
-				<div className="flex-1 px-6 py-12 max-w-7xl mx-auto w-full">
-					<h1 className="text-4xl font-heading text-ink mb-2 text-center" style={{ fontFamily: 'Cinzel, serif' }}>
-						The Grand Library
-					</h1>
-					<p className="text-center text-leather/60 italic mb-12">
-						Select a chronicle to continue, or forge a new legend.
-					</p>
+			<div className="min-h-screen flex flex-col text-white relative overflow-hidden">
+				{/* Library Background */}
+				<div className="absolute inset-0 z-0">
+					<div
+						className="absolute inset-0"
+						style={{
+							backgroundImage: "url('/background4-library.jpg')",
+							backgroundSize: 'cover',
+							backgroundPosition: 'center',
+							backgroundAttachment: 'fixed',
+						}}
+					/>
+				</div>
+				<div className="absolute inset-0 z-1 bg-black/50" />
 
-					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+				<div className="relative z-10 flex flex-col min-h-screen">
+					<TranslucentHeader
+						rightSlot={<ProjectSelector />}
+						onHomeClick={() => {
+							sessionStorage.setItem('ss_go_home_pending', '1');
+							window.dispatchEvent(new Event('ss_go_home'));
+							router.push('/');
+						}}
+					/>
+					<div className="flex-1 px-6 py-12 max-w-7xl mx-auto w-full">
+						<h1 className="text-4xl font-heading text-stone-100 mb-2 text-center" style={{ fontFamily: 'Cinzel, serif', textShadow: '0 2px 8px rgba(0,0,0,0.7)' }}>
+							The Grand Library
+						</h1>
+						<p className="text-center text-stone-300 italic mb-12" style={{ textShadow: '0 1px 4px rgba(0,0,0,0.6)' }}>
+							Select a chronicle to continue, or forge a new legend.
+						</p>
 
-						{/* Existing Project Books */}
-						{projects.map((project) => {
-							const { Icon, shape } = getVisuals(project.id);
-							let shapeClass = "rounded-full";
-							if (shape === 'square') shapeClass = "rounded-xl";
-							if (shape === 'diamond') shapeClass = "rounded-xl rotate-45";
-							if (shape === 'hexagon') shapeClass = "rounded-[2rem]";
+						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
 
-							return (
-								<div key={project.id} className="relative group">
-									{/* Book Cover Container */}
-									<div
-										onClick={() => handleOpenProject(project.id)}
-										className="relative aspect-[2/3] rounded-r-xl rounded-l-sm shadow-xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 cursor-pointer overflow-hidden border-l-8 border-leather flex flex-col items-center"
-										style={{
-											background: 'linear-gradient(135deg, #3e2723 0%, #5d4037 100%)',
-											boxShadow: 'inset 4px 0 10px rgba(0,0,0,0.5), 10px 10px 20px rgba(0,0,0,0.4)',
-										}}
-									>
-										{/* Spine Highlight */}
-										<div className="absolute left-0 top-0 bottom-0 w-4 bg-white/5 opacity-30 blur-sm pointer-events-none" />
+							{/* Existing Project Books */}
+							{projects.map((project) => {
+								const { Icon, shape } = getVisuals(project.id);
+								let shapeClass = "rounded-full";
+								if (shape === 'square') shapeClass = "rounded-xl";
+								if (shape === 'diamond') shapeClass = "rounded-xl rotate-45";
+								if (shape === 'hexagon') shapeClass = "rounded-[2rem]";
 
-										{/* Title Area */}
-										<div className="mt-20 px-8 text-center w-full z-10">
-											{editingId === project.id ? (
-												<input
-													type="text"
-													value={editTitle}
-													onChange={(e) => setEditTitle(e.target.value)}
-													onClick={(e) => e.stopPropagation()}
-													onKeyDown={(e) => {
-														e.stopPropagation();
-														if (e.key === 'Enter') handleSaveRename(project.id);
-													}}
-													className="w-full bg-black/20 text-amber-100 font-heading text-2xl text-center border-b border-gold/50 outline-none p-1"
-													autoFocus
-												/>
-											) : (
-												<h3
-													className="font-heading text-2xl sm:text-3xl text-amber-100/90 uppercase tracking-widest line-clamp-4 leading-relaxed"
-													style={{ fontFamily: 'Cinzel, serif', textShadow: '0 1px 2px rgba(0,0,0,0.5)' }}
-												>
-													{project.title}
-												</h3>
-											)}
-										</div>
+								return (
+									<div key={project.id} className="relative group">
+										{/* Book Cover Container */}
+										<div
+											onClick={() => handleOpenProject(project.id)}
+											className="relative aspect-[2/3] rounded-r-xl rounded-l-sm shadow-xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 cursor-pointer overflow-hidden border-l-8 border-leather flex flex-col items-center"
+											style={{
+												background: 'linear-gradient(135deg, #3e2723 0%, #5d4037 100%)',
+												boxShadow: 'inset 4px 0 10px rgba(0,0,0,0.5), 10px 10px 20px rgba(0,0,0,0.4)',
+											}}
+										>
+											{/* Spine Highlight */}
+											<div className="absolute left-0 top-0 bottom-0 w-4 bg-white/5 opacity-30 blur-sm pointer-events-none" />
 
-										{/* Center Decoration */}
-										<div className={`
+											{/* Title Area */}
+											<div className="mt-20 px-8 text-center w-full z-10">
+												{editingId === project.id ? (
+													<input
+														type="text"
+														value={editTitle}
+														onChange={(e) => setEditTitle(e.target.value)}
+														onClick={(e) => e.stopPropagation()}
+														onKeyDown={(e) => {
+															e.stopPropagation();
+															if (e.key === 'Enter') handleSaveRename(project.id);
+														}}
+														className="w-full bg-black/20 text-amber-100 font-heading text-2xl text-center border-b border-gold/50 outline-none p-1"
+														autoFocus
+													/>
+												) : (
+													<h3
+														className="font-heading text-2xl sm:text-3xl text-amber-100/90 uppercase tracking-widest line-clamp-4 leading-relaxed"
+														style={{ fontFamily: 'Cinzel, serif', textShadow: '0 1px 2px rgba(0,0,0,0.5)' }}
+													>
+														{project.title}
+													</h3>
+												)}
+											</div>
+
+											{/* Center Decoration */}
+											<div className={`
                       mt-auto mb-16 w-3/4 aspect-square 
                       border-4 border-double border-gold/30 
                       flex items-center justify-center relative 
                       opacity-70 group-hover:opacity-100 transition-opacity
                       ${shapeClass}
                     `}>
-											<div className={shape === 'diamond' ? '-rotate-45' : ''}>
-												<Icon className="w-16 h-16 text-gold/40" />
+												<div className={shape === 'diamond' ? '-rotate-45' : ''}>
+													<Icon className="w-16 h-16 text-gold/40" />
+												</div>
+												<div className={`absolute inset-2 border border-gold/20 ${shapeClass}`} />
 											</div>
-											<div className={`absolute inset-2 border border-gold/20 ${shapeClass}`} />
+										</div>
+
+										{/* Menu Trigger */}
+										<div
+											className={`absolute top-4 right-4 z-20 transition-opacity duration-200 ${menuOpenId === project.id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
+											ref={menuRef}
+										>
+											<button
+												onClick={(e) => {
+													e.stopPropagation();
+													setEditTitle(project.title);
+													setMenuOpenId(menuOpenId === project.id ? null : project.id);
+												}}
+												className="p-2 rounded-full hover:bg-black/20 text-white/50 hover:text-white transition-colors"
+											>
+												<MoreVertical className="w-5 h-5" />
+											</button>
+
+											{/* Dropdown Menu */}
+											{menuOpenId === project.id && (
+												<div className="absolute right-0 mt-2 w-48 bg-parchment rounded-lg shadow-xl border border-leather/20 overflow-hidden z-50">
+													<button
+														onClick={(e) => {
+															e.stopPropagation();
+															setEditingId(project.id);
+															setMenuOpenId(null);
+														}}
+														className="w-full text-left px-4 py-3 text-sm text-ink hover:bg-parchment-deep flex items-center gap-2"
+													>
+														<Edit2 className="w-4 h-4" /> Rename
+													</button>
+													<button
+														onClick={(e) => {
+															e.stopPropagation();
+															setDeleteConfirmId(project.id);
+															setMenuOpenId(null);
+														}}
+														className="w-full text-left px-4 py-3 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2"
+													>
+														<Trash2 className="w-4 h-4" /> Delete
+													</button>
+												</div>
+											)}
 										</div>
 									</div>
+								);
+							})}
 
-									{/* Menu Trigger */}
-									<div
-										className={`absolute top-4 right-4 z-20 transition-opacity duration-200 ${menuOpenId === project.id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
-										ref={menuRef}
+							{/* New Project Placeholder */}
+							<div
+								className="group relative aspect-[2/3] rounded-r-xl rounded-l-md border-4 border-dashed border-leather/20 hover:border-gold/60 transition-all bg-parchment/30 hover:bg-parchment flex flex-col items-center justify-center p-6 cursor-pointer"
+								onClick={(e) => {
+									const input = document.getElementById('new-project-input');
+									if (input) input.focus();
+								}}
+							>
+								<div className="w-16 h-16 rounded-full bg-leather/10 group-hover:bg-gold/20 flex items-center justify-center mb-4 transition-colors">
+									<Plus className="w-8 h-8 text-leather/40 group-hover:text-gold" />
+								</div>
+
+								<div className="w-full text-center" onClick={e => e.stopPropagation()}>
+									<input
+										id="new-project-input"
+										type="text"
+										placeholder="New Story Title..."
+										value={newProjectTitle}
+										onChange={(e) => setNewProjectTitle(e.target.value)}
+										onKeyDown={(e) => e.key === 'Enter' && handleCreate()}
+										className="w-full bg-transparent border-b border-leather/20 focus:border-gold text-center font-heading text-xl text-ink placeholder:text-leather/30 outline-none pb-2 transition-colors"
+										style={{ fontFamily: 'Cinzel, serif' }}
+									/>
+									<button
+										onClick={handleCreate}
+										disabled={!newProjectTitle.trim() || isCreating}
+										className={`mt-4 w-full py-2 rounded-lg font-bold text-sm transition-all ${newProjectTitle.trim()
+											? 'bg-gold text-parchment hover:bg-gold/80 shadow-md'
+											: 'bg-leather/10 text-leather/30 cursor-not-allowed'
+											}`}
 									>
-										<button
-											onClick={(e) => {
-												e.stopPropagation();
-												setEditTitle(project.title);
-												setMenuOpenId(menuOpenId === project.id ? null : project.id);
-											}}
-											className="p-2 rounded-full hover:bg-black/20 text-white/50 hover:text-white transition-colors"
-										>
-											<MoreVertical className="w-5 h-5" />
-										</button>
+										{isCreating ? 'Forging...' : 'Begin Chronicle'}
+									</button>
+								</div>
+							</div>
 
-										{/* Dropdown Menu */}
-										{menuOpenId === project.id && (
-											<div className="absolute right-0 mt-2 w-48 bg-parchment rounded-lg shadow-xl border border-leather/20 overflow-hidden z-50">
-												<button
-													onClick={(e) => {
-														e.stopPropagation();
-														setEditingId(project.id);
-														setMenuOpenId(null);
-													}}
-													className="w-full text-left px-4 py-3 text-sm text-ink hover:bg-parchment-deep flex items-center gap-2"
-												>
-													<Edit2 className="w-4 h-4" /> Rename
-												</button>
-												<button
-													onClick={(e) => {
-														e.stopPropagation();
-														setDeleteConfirmId(project.id);
-														setMenuOpenId(null);
-													}}
-													className="w-full text-left px-4 py-3 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2"
-												>
-													<Trash2 className="w-4 h-4" /> Delete
-												</button>
-											</div>
-										)}
+						</div>
+
+						{/* Delete Confirmation Modal */}
+						{deleteConfirmId && (
+							<div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+								<div className="bg-parchment rounded-lg p-6 max-w-md mx-4 shadow-2xl">
+									<h2 className="text-xl font-heading text-ink mb-2" style={{ fontFamily: 'Cinzel, serif' }}>
+										Burn this Chronicle?
+									</h2>
+									<p className="text-leather/70 mb-6">
+										Once lost to the flames, a story cannot be retold. Are you certain?
+									</p>
+									<div className="flex gap-3 justify-end">
+										<button
+											onClick={() => setDeleteConfirmId(null)}
+											className="px-4 py-2 rounded-lg bg-parchment-deep text-ink hover:bg-leather/20 transition-colors"
+										>
+											Spare It
+										</button>
+										<button
+											onClick={confirmDelete}
+											className="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 transition-colors"
+										>
+											Burn It
+										</button>
 									</div>
 								</div>
-							);
-						})}
-
-						{/* New Project Placeholder */}
-						<div
-							className="group relative aspect-[2/3] rounded-r-xl rounded-l-md border-4 border-dashed border-leather/20 hover:border-gold/60 transition-all bg-parchment/30 hover:bg-parchment flex flex-col items-center justify-center p-6 cursor-pointer"
-							onClick={(e) => {
-								const input = document.getElementById('new-project-input');
-								if (input) input.focus();
-							}}
-						>
-							<div className="w-16 h-16 rounded-full bg-leather/10 group-hover:bg-gold/20 flex items-center justify-center mb-4 transition-colors">
-								<Plus className="w-8 h-8 text-leather/40 group-hover:text-gold" />
 							</div>
-
-							<div className="w-full text-center" onClick={e => e.stopPropagation()}>
-								<input
-									id="new-project-input"
-									type="text"
-									placeholder="New Story Title..."
-									value={newProjectTitle}
-									onChange={(e) => setNewProjectTitle(e.target.value)}
-									onKeyDown={(e) => e.key === 'Enter' && handleCreate()}
-									className="w-full bg-transparent border-b border-leather/20 focus:border-gold text-center font-heading text-xl text-ink placeholder:text-leather/30 outline-none pb-2 transition-colors"
-									style={{ fontFamily: 'Cinzel, serif' }}
-								/>
-								<button
-									onClick={handleCreate}
-									disabled={!newProjectTitle.trim() || isCreating}
-									className={`mt-4 w-full py-2 rounded-lg font-bold text-sm transition-all ${newProjectTitle.trim()
-										? 'bg-gold text-parchment hover:bg-gold/80 shadow-md'
-										: 'bg-leather/10 text-leather/30 cursor-not-allowed'
-										}`}
-								>
-									{isCreating ? 'Forging...' : 'Begin Chronicle'}
-								</button>
-							</div>
-						</div>
-
+						)}
 					</div>
-
-					{/* Delete Confirmation Modal */}
-					{deleteConfirmId && (
-						<div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-							<div className="bg-parchment rounded-lg p-6 max-w-md mx-4 shadow-2xl">
-								<h2 className="text-xl font-heading text-ink mb-2" style={{ fontFamily: 'Cinzel, serif' }}>
-									Burn this Chronicle?
-								</h2>
-								<p className="text-leather/70 mb-6">
-									Once lost to the flames, a story cannot be retold. Are you certain?
-								</p>
-								<div className="flex gap-3 justify-end">
-									<button
-										onClick={() => setDeleteConfirmId(null)}
-										className="px-4 py-2 rounded-lg bg-parchment-deep text-ink hover:bg-leather/20 transition-colors"
-									>
-										Spare It
-									</button>
-									<button
-										onClick={confirmDelete}
-										className="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 transition-colors"
-									>
-										Burn It
-									</button>
-								</div>
-							</div>
-						</div>
-					)}
 				</div>
 			</div>
 		</>

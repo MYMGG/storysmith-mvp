@@ -129,7 +129,7 @@ const BookSpread = forwardRef(function BookSpread({ left, right, leftSubtitle, o
 								{leftSubtitle}
 							</div>
 						)}
-						<div className="absolute bottom-4 left-6 text-xs text-leather/40 font-heading">Page 1</div>
+
 					</div>
 				</div>
 
@@ -150,11 +150,13 @@ const BookSpread = forwardRef(function BookSpread({ left, right, leftSubtitle, o
           `}>
 						{/* ForgeHero content goes here */}
 						<div className="flex-1 overflow-y-auto">
-							{right || (
-								<span className="text-leather/40 font-heading italic">Story Content</span>
-							)}
+							<div className="w-full max-w-[520px] mx-auto h-full">
+								{right || (
+									<span className="text-leather/40 font-heading italic">Story Content</span>
+								)}
+							</div>
 						</div>
-						<div className="absolute bottom-4 right-6 text-xs text-leather/40 font-heading">Page 2</div>
+
 					</div>
 				</div>
 			</div>

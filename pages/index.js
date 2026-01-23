@@ -1,6 +1,6 @@
 // pages/index.js
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import LandingPage from '../components/LandingPage';
@@ -31,10 +31,15 @@ export default function Home() {
   const [email, setEmail] = useState('');
   const [showLandingPage, setShowLandingPage] = useState(true);
 
-  // Check for existing session
+  // Check for existing session - only auto-login if not explicitly returning home
   useEffect(() => {
     if (typeof window !== 'undefined' && sessionStorage.getItem('ss_admin_authed_v1') === '1') {
-      setShowLandingPage(false);
+      // Only set false if showLandingPage hasn't been explicitly set to true by goHome event
+      if (!sessionStorage.getItem('ss_go_home_pending')) {
+        setShowLandingPage(false);
+      } else {
+        sessionStorage.removeItem('ss_go_home_pending');
+      }
     }
   }, []);
 
@@ -43,6 +48,10 @@ export default function Home() {
   const [storyState, setStoryState] = useState(() => createInitialStoryState());
   const [sharedResponse, setSharedResponse] = useState("");
   const bookRef = useRef(null);
+  const bookElRef = useRef(null); // DOM ref for measuring BookSpread position
+  const headerRef = useRef(null);
+  const mainRef = useRef(null);
+  const [actsBarTop, setActsBarTop] = useState(80); // Initial estimate
   const pendingAdvanceRef = useRef(null); // Queue for deferred ForgeHero state changes
   const password = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || '6425';
 
@@ -73,6 +82,29 @@ export default function Home() {
     setSharedResponse("");
   };
 
+  // Listen for cross-page "go home" event to trigger landing state
+  useEffect(() => {
+    const handler = () => resetApp();
+    window.addEventListener('ss_go_home', handler);
+    return () => window.removeEventListener('ss_go_home', handler);
+  }, []);
+
+  // Dynamically center ActsBar in the gap between header and BOOK top
+  useLayoutEffect(() => {
+    const calculateActsBarPosition = () => {
+      if (headerRef.current && bookElRef.current) {
+        const headerBottom = headerRef.current.getBoundingClientRect().bottom;
+        const bookTop = bookElRef.current.getBoundingClientRect().top;
+        if (bookTop <= headerBottom) return; // Guard against invalid layout
+        const gapMid = headerBottom + (bookTop - headerBottom) / 2;
+        setActsBarTop(gapMid);
+      }
+    };
+    calculateActsBarPosition();
+    window.addEventListener('resize', calculateActsBarPosition);
+    return () => window.removeEventListener('resize', calculateActsBarPosition);
+  }, [showLandingPage]);
+
   const renderAppInterface = () => (
     <div className="min-h-screen flex flex-col text-white relative overflow-hidden" style={{ fontFamily: 'Lato, sans-serif' }}>
       {/* Dynamic Background System */}
@@ -94,51 +126,58 @@ export default function Home() {
       <div className="absolute inset-0 z-1 bg-black/50" />
 
       <div className="relative z-10 flex flex-col min-h-screen">
-        <TranslucentHeader onHomeClick={resetApp} rightSlot={<ProjectSelector />} />
+        <div ref={headerRef}>
+          <TranslucentHeader onHomeClick={resetApp} rightSlot={<ProjectSelector />} />
+        </div>
 
-        {/* Floating Acts Bar - absolute overlay, doesn't affect layout flow */}
-        <div className="absolute left-0 right-0 top-[56px] sm:top-[64px] z-20 pointer-events-none">
+        {/* Floating Acts Bar - dynamically centered in gap */}
+        <div
+          className="fixed left-0 right-0 z-20 pointer-events-none"
+          style={{ top: actsBarTop, transform: 'translateY(-50%)' }}
+        >
           <ActsBar activeTab={activeTab} setActiveTab={setActiveTab} />
         </div>
 
-        <main className="flex-1 flex items-center justify-center p-4">
+        <main ref={mainRef} className="flex-1 flex items-center justify-center p-4">
           {/* Act 1 (Forge): Full-width 2-page book layout */}
           {activeTab === 0 && (
-            <BookSpread
-              ref={bookRef}
-              left={
-                <video
-                  key={tabs[activeTab].videoSrc}
-                  className="absolute top-0 left-0 w-full h-full object-cover rounded-lg"
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                >
-                  <source src={tabs[activeTab].videoSrc} type="video/mp4" />
-                  Your browser does not support the video tag.
-                </video>
-              }
-              leftSubtitle={sharedResponse}
-              right={
-                <ForgeHero
-                  embedded
-                  storyState={storyState}
-                  setStoryState={setStoryState}
-                  setActiveTab={setActiveTab}
-                  setSharedResponse={setSharedResponse}
-                  sharedResponse={sharedResponse}
-                  onAdvanceRequested={(fn) => {
-                    pendingAdvanceRef.current = fn;
-                    bookRef.current?.triggerFlip();
-                  }}
-                />
-              }
-              onFlipMidpoint={() => {
-                pendingAdvanceRef.current?.();
-                pendingAdvanceRef.current = null;
-              }}
-            />
+            <div ref={bookElRef} className="w-full h-full flex items-center justify-center">
+              <BookSpread
+                ref={bookRef}
+                left={
+                  <video
+                    key={tabs[activeTab].videoSrc}
+                    className="absolute top-0 left-0 w-full h-full object-cover rounded-lg"
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                  >
+                    <source src={tabs[activeTab].videoSrc} type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                }
+                leftSubtitle={sharedResponse}
+                right={
+                  <ForgeHero
+                    embedded
+                    storyState={storyState}
+                    setStoryState={setStoryState}
+                    setActiveTab={setActiveTab}
+                    setSharedResponse={setSharedResponse}
+                    sharedResponse={sharedResponse}
+                    onAdvanceRequested={(fn) => {
+                      pendingAdvanceRef.current = fn;
+                      bookRef.current?.triggerFlip();
+                    }}
+                  />
+                }
+                onFlipMidpoint={() => {
+                  pendingAdvanceRef.current?.();
+                  pendingAdvanceRef.current = null;
+                }}
+              />
+            </div>
           )}
           {/* Act 2 + 3: Original 50/50 layout (to be converted later) */}
           {activeTab !== 0 && (

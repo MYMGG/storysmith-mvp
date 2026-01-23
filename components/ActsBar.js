@@ -76,8 +76,8 @@ export default function ActsBar({ activeTab, setActiveTab }) {
                     absolute top-[120%] w-max text-sm font-bold font-heading tracking-widest uppercase transition-colors
                     ${isActive ? 'text-gold' : ''}
                     ${isCompleted ? 'text-gold' : ''}
-                    ${isLocked ? 'text-leather/50' : ''}
-                    ${!isActive && !isCompleted && !isLocked ? 'text-leather/80' : ''}
+                    ${isLocked ? 'text-stone-400' : ''}
+                    ${!isActive && !isCompleted && !isLocked ? 'text-stone-300' : ''}
                   `}
 									style={isActive ? { textShadow: '0 1px 3px rgba(0,0,0,0.3)' } : {}}
 								>

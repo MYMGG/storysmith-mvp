@@ -5,7 +5,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import * as projectStore from '../lib/projectStore.js';
-import { BookOpen, ChevronDown, Plus, Book, Loader2 } from 'lucide-react';
+import { BookOpen, ChevronDown, Book, Loader2, LibraryBig } from 'lucide-react';
 
 /**
  * ProjectSelector - Dropdown to select/create projects in header.
@@ -89,8 +89,8 @@ export default function ProjectSelector() {
 								}}
 								className="w-full text-left px-4 py-2 text-sm text-gold hover:bg-parchment-deep/50 font-bold font-heading transition-colors flex items-center gap-2 rounded-md"
 							>
-								<Plus className="w-4 h-4" />
-								Manage Chronicles
+								<LibraryBig className="w-4 h-4" />
+								Library
 							</button>
 
 							<div className="h-px bg-leather/10 my-1 mx-2" />
