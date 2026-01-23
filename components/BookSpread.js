@@ -32,39 +32,33 @@ const BookSpread = forwardRef(function BookSpread({ left, right, leftSubtitle, o
 
 		onFlipStart?.();
 
-		// ONE: Fade Out Text (0.5s)
-		setAnimState('fading-out');
+		// ONE: Closing Phase (Right Page Shrinks) - Start immediately (no fade-out)
+		setAnimState('closing');
 
 		setTimeout(() => {
-			// TWO: Closing Phase (Right Page Shrinks) (0.5s)
-			setAnimState('closing');
+			// TWO: RESET / SWAP Phase (Instant) - Invoke midpoint callback for content swap
+			setAnimState('reset');
+			onFlipMidpoint?.(); // Content should swap here
 
-			setTimeout(() => {
-				// THREE: RESET / SWAP Phase (Instant) - Invoke midpoint callback for content swap
-				setAnimState('reset');
-				onFlipMidpoint?.(); // Content should swap here
+			// Force a browser repaint before starting the next animation
+			requestAnimationFrame(() => {
+				setTimeout(() => {
+					// THREE: Opening Phase (Left Page Expands) (0.5s)
+					setAnimState('opening');
 
-				// Force a browser repaint before starting the next animation
-				requestAnimationFrame(() => {
+					// FOUR: Content Fade In (0.5s)
 					setTimeout(() => {
-						// FOUR: Opening Phase (Left Page Expands) (0.45s)
-						setAnimState('opening');
-
-						// FIVE: Content Fade In (0.5s)
+						setAnimState('fading-in-content');
+						// FIVE: Idle (Reset for interaction)
 						setTimeout(() => {
-							setAnimState('fading-in-content');
-							// SIX: Idle (Reset for interaction)
-							setTimeout(() => {
-								setAnimState('idle');
-								onFlipEnd?.();
-							}, 500);
+							setAnimState('idle');
+							onFlipEnd?.();
 						}, 500);
-					}, 20);
-				});
+					}, 500);
+				}, 20);
+			});
 
-			}, 500); // 500ms duration for 'closing'
-
-		}, 500); // 500ms duration for 'fading-out'
+		}, 500); // 500ms duration for 'closing'
 	};
 
 	return (
