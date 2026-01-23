@@ -66,6 +66,17 @@ export default function Home() {
     router.push('/projects');
   });
 
+  // Dev shortcut: Enable jumping directly to Act III via ?act=3
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('act') === '3' || params.get('tab') === '2') {
+        setShowLandingPage(false);
+        setActiveTab(2);
+      }
+    }
+  }, []);
+
   // This is the correct array that the application should be using
   const tabs = [
     { label: 'Forge Hero', videoSrc: '/videos/Keeper1.mp4', bgSrc: '/background1.jpg' },
