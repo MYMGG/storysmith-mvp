@@ -10,7 +10,7 @@ import BindBook from '../components/BindBook';
 import BookSpread from '../components/BookSpread';
 import TranslucentHeader from '../components/TranslucentHeader';
 import ActsBar from '../components/ActsBar';
-import ProjectSelector from '../components/ProjectSelector';
+import { BookOpen } from 'lucide-react';
 import useAdminAuth from '../hooks/useAdminAuth';
 import { createEmptyStoryState } from '../lib/storyState.js';
 
@@ -127,7 +127,18 @@ export default function Home() {
 
       <div className="relative z-10 flex flex-col min-h-screen">
         <div ref={headerRef}>
-          <TranslucentHeader onHomeClick={resetApp} rightSlot={<ProjectSelector />} />
+          <TranslucentHeader
+            onHomeClick={resetApp}
+            rightSlot={
+              <button
+                onClick={() => router.push('/projects')}
+                className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-parchment-deep/60 text-stone-100 hover:bg-parchment-deep/80 transition font-heading"
+              >
+                <BookOpen className="w-4 h-4" />
+                Library
+              </button>
+            }
+          />
         </div>
 
         {/* Floating Acts Bar - dynamically centered in gap */}
@@ -203,7 +214,7 @@ export default function Home() {
           )}
         </main>
       </div>
-    </div>
+    </div >
   );
 
   return (
