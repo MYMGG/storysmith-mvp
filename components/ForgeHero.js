@@ -11,6 +11,8 @@ export default function ForgeHero({
   setActiveTab,
   setSharedResponse,
   sharedResponse,
+  embedded = false,
+  onAdvanceRequested,
 }) {
   const [currentForgeHeroStep, setCurrentForgeHeroStep] = useState(0);
   const [currentQuestion, setCurrentQuestion] = useState('start');
@@ -48,22 +50,29 @@ export default function ForgeHero({
   const handlePhotoFileChange = async (event) => { /* ... */ };
 
   const handleHeroTypeSelection = (type) => {
-    setHeroDetails(prev => ({ ...prev, type }));
-    if (type === 'real') {
-      setCurrentForgeHeroStep(1);
-      setSharedResponse("How marvelous! A legend in the making!");
-    } else if (type === 'fictional') {
-      setCurrentForgeHeroStep(2);
-      setCurrentQuestion('name');
-    } else if (type === 'surprise') {
-      generateSurpriseHero('fictional');
-      setSharedResponse("A hero, conjured from the void!");
-    }
+    const doAdvance = () => {
+      setHeroDetails(prev => ({ ...prev, type }));
+      if (type === 'real') {
+        setCurrentForgeHeroStep(1);
+        setSharedResponse("How marvelous! A legend in the making!");
+      } else if (type === 'fictional') {
+        setCurrentForgeHeroStep(2);
+        setCurrentQuestion('name');
+      } else if (type === 'surprise') {
+        generateSurpriseHero('fictional');
+        setSharedResponse("A hero, conjured from the void!");
+      }
+    };
+    // If onAdvanceRequested available, queue the thunk; otherwise execute immediately
+    onAdvanceRequested ? onAdvanceRequested(doAdvance) : doAdvance();
   };
 
   const handleQuestionAnswer = (field, value, nextQuestion) => {
-    setHeroDetails(prev => ({ ...prev, [field]: value }));
-    setCurrentQuestion(nextQuestion);
+    const doAdvance = () => {
+      setHeroDetails(prev => ({ ...prev, [field]: value }));
+      setCurrentQuestion(nextQuestion);
+    };
+    onAdvanceRequested ? onAdvanceRequested(doAdvance) : doAdvance();
   };
 
   const handleNameConfirmation = (name) => {
@@ -86,10 +95,13 @@ export default function ForgeHero({
   };
 
   const handleForgeHeroSubmit = (details = heroDetails) => {
-    const prompt = constructHeroPrompt(details);
-    setSharedResponse("Behold, the hero’s face shines with living light!");
-    generateRealImage(prompt);
-    setCurrentForgeHeroStep(3);
+    const doAdvance = () => {
+      const prompt = constructHeroPrompt(details);
+      setSharedResponse("Behold, the hero's face shines with living light!");
+      generateRealImage(prompt);
+      setCurrentForgeHeroStep(3);
+    };
+    onAdvanceRequested ? onAdvanceRequested(doAdvance) : doAdvance();
   };
 
   const handleForgeHeroCompletion = () => {
@@ -176,7 +188,7 @@ export default function ForgeHero({
           <p className="text-stone-800 text-lg font-bold">The name born of magic is:</p>
           <p className="text-4xl font-extrabold text-amber-700" style={{ fontFamily: 'Cinzel, serif' }}>{generatedName}</p>
           <button onClick={() => handleNameConfirmation(generatedName)} className={choiceButtonStyle}>Yes, that's perfect!</button>
-          <button onClick={() => setGeneratedName('')} className={choiceButtonStyle}>Not quite, let's try again.</button>
+          <button onClick={() => { setGeneratedName(''); setCurrentQuestion('name'); }} className={choiceButtonStyle}>Not quite, let's try again.</button>
         </div>
       );
     }
@@ -401,6 +413,19 @@ export default function ForgeHero({
     }
   };
 
+  // When embedded in BookSpread, render without outer parchment card styling
+  // sharedResponse is displayed on left page as subtitle, so omit it here
+  if (embedded) {
+    return (
+      <div className="w-full h-full flex flex-col" style={{ fontFamily: '"Cinzel", serif', color: '#4f463c' }}>
+        <div className="flex-1 overflow-y-auto custom-scrollbar">
+          {renderStepContent()}
+        </div>
+      </div>
+    );
+  }
+
+  // Original standalone rendering with parchment card
   return (
     <div
       className="w-full max-w-lg mx-auto h-full max-h-[80vh] flex flex-col p-8 rounded-lg shadow-2xl"

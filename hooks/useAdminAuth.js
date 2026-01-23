@@ -9,6 +9,9 @@ export default function useAdminAuth(correctPassword, onLoginSuccess) {
 
   const handleAdminLogin = () => {
     if (adminPasswordInput === correctPassword) {
+      if (typeof window !== 'undefined') {
+        sessionStorage.setItem('ss_admin_authed_v1', '1');
+      }
       setShowPasswordInput(false);
       setAdminPasswordInput('');
       onLoginSuccess(); // Call the success function passed from the parent

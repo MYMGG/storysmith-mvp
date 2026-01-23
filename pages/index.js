@@ -1,11 +1,16 @@
 // pages/index.js
 
-import { useState, useEffect } from 'react';
+import { useState, useRef, useEffect, useLayoutEffect } from 'react';
+import { useRouter } from 'next/router';
 import Head from 'next/head';
 import LandingPage from '../components/LandingPage';
 import ForgeHero from '../components/ForgeHero';
 import SpinTale from '../components/SpinTale';
 import BindBook from '../components/BindBook';
+import BookSpread from '../components/BookSpread';
+import TranslucentHeader from '../components/TranslucentHeader';
+import ActsBar from '../components/ActsBar';
+import ProjectSelector from '../components/ProjectSelector';
 import useAdminAuth from '../hooks/useAdminAuth';
 import { createEmptyStoryState } from '../lib/storyState.js';
 
@@ -22,12 +27,32 @@ function createInitialStoryState() {
 }
 
 export default function Home() {
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [showLandingPage, setShowLandingPage] = useState(true);
+
+  // Check for existing session - only auto-login if not explicitly returning home
+  useEffect(() => {
+    if (typeof window !== 'undefined' && sessionStorage.getItem('ss_admin_authed_v1') === '1') {
+      // Only set false if showLandingPage hasn't been explicitly set to true by goHome event
+      if (!sessionStorage.getItem('ss_go_home_pending')) {
+        setShowLandingPage(false);
+      } else {
+        sessionStorage.removeItem('ss_go_home_pending');
+      }
+    }
+  }, []);
+
   const [activeTab, setActiveTab] = useState(0);
   const [isVideoFinished, setIsVideoFinished] = useState(false);
   const [storyState, setStoryState] = useState(() => createInitialStoryState());
   const [sharedResponse, setSharedResponse] = useState("");
+  const bookRef = useRef(null);
+  const bookElRef = useRef(null); // DOM ref for measuring BookSpread position
+  const headerRef = useRef(null);
+  const mainRef = useRef(null);
+  const [actsBarTop, setActsBarTop] = useState(80); // Initial estimate
+  const pendingAdvanceRef = useRef(null); // Queue for deferred ForgeHero state changes
   const password = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || '6425';
 
   const {
@@ -36,7 +61,10 @@ export default function Home() {
     adminPasswordInput,
     setAdminPasswordInput,
     handleAdminLogin,
-  } = useAdminAuth(password, () => setShowLandingPage(false));
+  } = useAdminAuth(password, () => {
+    // Redirect to projects page on successful login
+    router.push('/projects');
+  });
 
   // Dev shortcut: Enable jumping directly to Act III via ?act=3
   useEffect(() => {
@@ -65,6 +93,29 @@ export default function Home() {
     setSharedResponse("");
   };
 
+  // Listen for cross-page "go home" event to trigger landing state
+  useEffect(() => {
+    const handler = () => resetApp();
+    window.addEventListener('ss_go_home', handler);
+    return () => window.removeEventListener('ss_go_home', handler);
+  }, []);
+
+  // Dynamically center ActsBar in the gap between header and BOOK top
+  useLayoutEffect(() => {
+    const calculateActsBarPosition = () => {
+      if (headerRef.current && bookElRef.current) {
+        const headerBottom = headerRef.current.getBoundingClientRect().bottom;
+        const bookTop = bookElRef.current.getBoundingClientRect().top;
+        if (bookTop <= headerBottom) return; // Guard against invalid layout
+        const gapMid = headerBottom + (bookTop - headerBottom) / 2;
+        setActsBarTop(gapMid);
+      }
+    };
+    calculateActsBarPosition();
+    window.addEventListener('resize', calculateActsBarPosition);
+    return () => window.removeEventListener('resize', calculateActsBarPosition);
+  }, [showLandingPage]);
+
   const renderAppInterface = () => (
     <div className="min-h-screen flex flex-col text-white relative overflow-hidden" style={{ fontFamily: 'Lato, sans-serif' }}>
       {/* Dynamic Background System */}
@@ -86,34 +137,81 @@ export default function Home() {
       <div className="absolute inset-0 z-1 bg-black/50" />
 
       <div className="relative z-10 flex flex-col min-h-screen">
-        <header className="bg-transparent py-4">
-          <div className="max-w-screen-2xl mx-auto px-8 flex justify-between items-center">
-            <h1 className="text-4xl sm:text-5xl font-extrabold text-stone-200" style={{ fontFamily: 'Cinzel, serif', textShadow: '0 0 5px rgba(255, 255, 255, 0.2)' }}>
-              StorySmith
-            </h1>
-            <nav><ul className="flex space-x-6"><li><a href="#" onClick={(e) => { e.preventDefault(); resetApp(); }} className="text-gray-300 hover:text-white transition-colors">Home</a></li></ul></nav>
-          </div>
-        </header>
+        <div ref={headerRef}>
+          <TranslucentHeader onHomeClick={resetApp} rightSlot={<ProjectSelector />} />
+        </div>
 
-        <main className="flex-1 flex flex-col md:flex-row gap-8 items-stretch p-8">
-          <div className="relative flex-grow w-full md:w-1/2 min-h-0 rounded-2xl shadow-2xl overflow-hidden">
-            <video
-              key={tabs[activeTab].videoSrc}
-              className="absolute top-0 left-0 w-full h-full object-cover"
-              autoPlay
-              loop
-              muted
-              playsInline
-            >
-              <source src={tabs[activeTab].videoSrc} type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
-          </div>
-          <div className="flex-grow w-full md:w-1/2 flex justify-center items-center">
-            {activeTab === 0 && <ForgeHero storyState={storyState} setStoryState={setStoryState} setActiveTab={setActiveTab} setSharedResponse={setSharedResponse} />}
-            {activeTab === 1 && <SpinTale storyState={storyState} setStoryState={setStoryState} setActiveTab={setActiveTab} setSharedResponse={setSharedResponse} />}
-            {activeTab === 2 && <BindBook storyState={storyState} setStoryState={setStoryState} setActiveTab={setActiveTab} setSharedResponse={setSharedResponse} resetApp={resetApp} />}
-          </div>
+        {/* Floating Acts Bar - dynamically centered in gap */}
+        <div
+          className="fixed left-0 right-0 z-20 pointer-events-none"
+          style={{ top: actsBarTop, transform: 'translateY(-50%)' }}
+        >
+          <ActsBar activeTab={activeTab} setActiveTab={setActiveTab} />
+        </div>
+
+        <main ref={mainRef} className="flex-1 flex items-center justify-center p-4">
+          {/* Act 1 (Forge): Full-width 2-page book layout */}
+          {activeTab === 0 && (
+            <div ref={bookElRef} className="w-full h-full flex items-center justify-center">
+              <BookSpread
+                ref={bookRef}
+                left={
+                  <video
+                    key={tabs[activeTab].videoSrc}
+                    className="absolute top-0 left-0 w-full h-full object-cover rounded-lg"
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                  >
+                    <source src={tabs[activeTab].videoSrc} type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                }
+                leftSubtitle={sharedResponse}
+                right={
+                  <ForgeHero
+                    embedded
+                    storyState={storyState}
+                    setStoryState={setStoryState}
+                    setActiveTab={setActiveTab}
+                    setSharedResponse={setSharedResponse}
+                    sharedResponse={sharedResponse}
+                    onAdvanceRequested={(fn) => {
+                      pendingAdvanceRef.current = fn;
+                      bookRef.current?.triggerFlip();
+                    }}
+                  />
+                }
+                onFlipMidpoint={() => {
+                  pendingAdvanceRef.current?.();
+                  pendingAdvanceRef.current = null;
+                }}
+              />
+            </div>
+          )}
+          {/* Act 2 + 3: Original 50/50 layout (to be converted later) */}
+          {activeTab !== 0 && (
+            <div className="flex-1 flex flex-col md:flex-row gap-8 items-stretch w-full max-w-screen-2xl">
+              <div className="relative flex-grow w-full md:w-1/2 min-h-0 rounded-2xl shadow-2xl overflow-hidden">
+                <video
+                  key={tabs[activeTab].videoSrc}
+                  className="absolute top-0 left-0 w-full h-full object-cover"
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                >
+                  <source src={tabs[activeTab].videoSrc} type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+              <div className="flex-grow w-full md:w-1/2 flex justify-center items-center">
+                {activeTab === 1 && <SpinTale storyState={storyState} setStoryState={setStoryState} setActiveTab={setActiveTab} setSharedResponse={setSharedResponse} />}
+                {activeTab === 2 && <BindBook storyState={storyState} setStoryState={setStoryState} setActiveTab={setActiveTab} setSharedResponse={setSharedResponse} resetApp={resetApp} />}
+              </div>
+            </div>
+          )}
         </main>
       </div>
     </div>
