@@ -360,6 +360,106 @@ This document maps the canonical spec (`storysmith-composite-baseline-v3.0-redac
 
 ---
 
+### TS-017: Prestige Artifact — Hero Card + Progress Passport
+- **Title**: Add collectible “Hero Card” and station progress indicator (Act I)
+- **Priority**: P1
+- **DependsOn**: TS-006
+- **SpecRefs**: §3 Act I outputs, §8 Deliverables (presentation/readability)
+- **FilesLikelyTouched**:
+  - `components/ForgeHero.js`
+  - `components/viewer/` (optional display panel)
+  - `hooks/useBookState.js` (if needed for persistence)
+- **AcceptanceCriteria**:
+  - [ ] After hero creation completes, UI shows a “Hero Card” panel that looks collectible and premium (not childish):
+    - hero name + tagline
+    - 3 defining traits
+    - 1 flaw/weakness
+    - 1 goal
+    - hero portrait (or tasteful placeholder if none)
+  - [ ] Hero Card content is derived from existing `CharacterBlock` fields (avoid new schema fields unless strictly necessary)
+  - [ ] Add a compact “Progress Passport” indicator for Act I (e.g., Station 1–4) that visibly stamps completed steps
+  - [ ] Existing export flow remains intact (`MyHeroAssetBundle_Part1.json`)
+- **Verification**: Manual test: complete Act I → confirm Hero Card + Passport stamps render → export still downloads and validates → check responsive at ~360px width
+- **Risk/Notes**:
+  - Keep micro-animations subtle; avoid confetti/“kiddy” effects
+
+---
+
+### TS-018: Prestige Artifact — Story Blueprint (Arc + Scene Map)
+- **Title**: Generate and display a “Story Blueprint” (Act II completion + viewer-ready)
+- **Priority**: P1
+- **DependsOn**: TS-009
+- **SpecRefs**: §3 Act II outputs, §5 Data Contracts (derive from scenes), §8 Deliverables
+- **FilesLikelyTouched**:
+  - `components/SpinTale.js`
+  - `components/viewer/` (Blueprint panel)
+  - `lib/` (optional helper: `blueprintFromStoryState.js`)
+- **AcceptanceCriteria**:
+  - [ ] After Act II completion, show a “Story Blueprint” section that makes the work feel earned:
+    - 1-paragraph premise/logline
+    - numbered scene list (title + 1-sentence beat each)
+    - optional: theme/moral line (single sentence)
+  - [ ] Blueprint is deterministic from `StoryState` (prefer derive-on-demand over schema changes)
+  - [ ] Blueprint is available to display later when the final bundle is viewed (viewer reads StoryState and can render the Blueprint)
+- **Verification**: Manual test: complete Act II → Blueprint displays → export Part2 bundle → later import through Act III and load final in viewer → Blueprint can be shown from StoryState-derived data
+- **Risk/Notes**:
+  - Avoid long text walls; blueprint is a “map,” not the full manuscript
+
+---
+
+### TS-019: Production Checklist + Visible Progress (No Dead Waiting)
+- **Title**: Add “Production Checklist” and progress UI across Acts II/III + viewer
+- **Priority**: P1
+- **DependsOn**: TS-011
+- **SpecRefs**: §6 Image Pipeline, §8 Deliverables, §4 Reflex Recovery Kernel (UX clarity)
+- **FilesLikelyTouched**:
+  - `components/SpinTale.js`
+  - `components/BindBook.js`
+  - `components/viewer/` (optional status panel)
+- **AcceptanceCriteria**:
+  - [ ] Show a “Production Checklist” that updates as the user progresses:
+    - Hero ✅
+    - Story Scenes ✅
+    - Illustration Prompts ✅
+    - Illustrations (n/N) during Act III
+    - Export ✅ when final bundle is ready
+  - [ ] During Act III image generation, UI shows:
+    - current scene index (e.g., 3/12)
+    - status per scene (pending/working/done/failed)
+    - clear retry entry points (tie into TS-015)
+  - [ ] No “silent waiting”: every long step has visible progress + what’s happening
+- **Verification**: Manual test: import Part2 → start generation → watch checklist tick and per-scene progress update → simulate a failure and confirm status shows “failed” and can retry
+- **Risk/Notes**:
+  - Keep language non-technical (“Making page 3…” vs “Calling API…”)
+
+---
+
+### TS-020: Grand Unveiling Ceremony + Share Pack v1
+- **Title**: Add a premium “Grand Unveiling” completion screen (Act III) + lightweight share pack
+- **Priority**: P0
+- **DependsOn**: TS-013, TS-014, TS-019
+- **SpecRefs**: §8 Deliverables (final artifact experience)
+- **FilesLikelyTouched**:
+  - `components/BindBook.js`
+  - `pages/viewer/[bookId].js` (or viewer load flow)
+  - `components/viewer/` (optional unveiling components)
+- **AcceptanceCriteria**:
+  - [ ] After all images are generated and final bundle is ready, Act III shows a “Grand Unveiling” screen that is premium/ceremonial (tone shift: fewer jokes, more pride)
+  - [ ] Unveiling screen includes:
+    - cover preview
+    - “Open Your Book” (loads the viewer with the final StoryState)
+    - “Download Final Bundle” (existing TS-013 output)
+    - “Creator Credits / Certificate” block (Created for: ___, Date, Title)
+  - [ ] Share Pack v1 (lightweight, no ZIP required):
+    - copyable “share blurb” text (1–2 sentences)
+    - optional download of cover image if available (or at minimum, a clear viewer link)
+  - [ ] The screen reinforces accomplishment via visible proof-of-work artifacts (Hero Card, Blueprint, Checklist state)
+- **Verification**: Manual test: complete Act III → confirm Unveiling renders → “Open Your Book” works end-to-end in viewer → final bundle downloads → copy/share text works → responsive at ~360px width
+- **Risk/Notes**:
+  - Avoid manipulative upsells here; keep upgrade messaging secondary if present
+
+---
+
 ### TS-016: PDF Export (Post-MVP)
 - **Title**: Implement PDF export functionality
 - **Priority**: P2
@@ -380,24 +480,27 @@ This document maps the canonical spec (`storysmith-composite-baseline-v3.0-redac
 
 ## C) Task Dependency Graph
 
-```
 TS-001 (Persistence Decision)
     └── TS-004 (Export Util)
             └── TS-005 (Import Util)
                     └── TS-006 (Act I Export)
+                            ├── TS-017 (Hero Card + Progress Passport)
                             └── TS-007 (Act II Import)
                                     └── TS-008 (Act II Prompts-Only)
                                             └── TS-009 (Act II Export)
+                                                    ├── TS-018 (Story Blueprint)
                                                     └── TS-010 (Act III Import)
                                                             └── TS-011 (Act III Image Loop)
-                                                                    └── TS-012 (AssetsManifest)
-                                                                            └── TS-013 (Final Export)
-                                                                                    └── TS-014 (Viewer Integration)
-                                                                                            └── TS-015 (Error Recovery)
+                                                                    ├── TS-012 (AssetsManifest)
+                                                                    │       └── TS-013 (Final Export)
+                                                                    │               └── TS-014 (Viewer Integration)
+                                                                    │                       ├── TS-019 (Checklist + Progress)
+                                                                    │                       └── TS-020 (Grand Unveiling)
+                                                                    └── TS-015 (Error Recovery)
 
 TS-002 (PDF Decision) → TS-016 (PDF Export)
 TS-003 (PromptTree Decision) → [No dependent tasks in MVP]
-```
+
 
 ---
 
@@ -432,9 +535,9 @@ AG: [Implements bundle export utility, runs verification, suggests TS-005]
 
 ## E) Summary
 
-- **Total Tasks**: 16
-- **P0 (Critical Path)**: 8 tasks
-- **P1 (Important)**: 5 tasks
+- **Total Tasks**: 20
+- **P0 (Critical Path)**: 9 tasks
+- **P1 (Important)**: 8 tasks
 - **P2 (Nice-to-have)**: 3 tasks
 - **Decision Tasks**: 3
-- **Estimated MVP Scope**: TS-001 through TS-014 (excluding TS-016 PDF)
+- **Estimated MVP Scope**: TS-001 through TS-015 plus TS-017 through TS-020 (excluding TS-016 PDF)
