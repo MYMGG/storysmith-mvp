@@ -15,7 +15,7 @@ This document maps the canonical spec (`storysmith-composite-baseline-v3.0-redac
 
 ### Macro Act Structure (v4.0)
 
-StorySmith v4.0 reframes the creation journey into **10 Macro Acts** across 4 explicit phases.
+StorySmith v4.0 reframes the creation journey into **9 Macro Acts** across 4 explicit phases (plus Acts 4+ deferred to post-MVP).
 
 #### Phase Separation
 
