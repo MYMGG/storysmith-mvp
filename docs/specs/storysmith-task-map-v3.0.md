@@ -15,7 +15,7 @@ This document maps the canonical spec (`storysmith-composite-baseline-v3.0-redac
 
 ### Macro Act Structure (v4.0)
 
-StorySmith v4.0 reframes the creation journey into **9 Macro Acts** across 4 explicit phases (plus Acts 4+ deferred to post-MVP).
+StorySmith v4.0 reframes the creation journey into **9 MVP Macro Acts** across 4 explicit phases (Acts 4+ deferred to post-MVP).
 
 #### Phase Separation
 
@@ -52,7 +52,7 @@ Each Macro Act concludes with an **Accomplishment Landing Page** that reveals:
 | **3C: Assets Manifest** | Compile all URLs + metadata | "Assets Packaged" (OPTIONAL: 📦) | TS-012 |
 | **3D: Grand Unveiling** | Display cover, credits, viewer launch, final export | "Book Published" (OPTIONAL: 🏆) | TS-020, TS-013, TS-014 |
 
-**Total MVP Scope**: 8 Macro Acts (1A through 3D). Acts 4+ (Visual Calibration, Audio Narration, etc.) deferred to post-MVP.
+**Total MVP Scope**: 9 Macro Acts (1A through 3D). Acts 4+ (Visual Calibration, Audio Narration, etc.) deferred to post-MVP.
 
 ### Acts Implemented
 | Act | API Route | UI Component | Status |
@@ -319,8 +319,8 @@ Each Macro Act concludes with an **Accomplishment Landing Page** that reveals:
 - **Risk/Notes**:
   - UX: show summary of imported content
 - **v4 Addenda (for v4.0 integration)**:
-  - [ ] After successful import, "Production Ready" badge displays (Act 3A Accomplishment Landing Page, see TS-021)
-  - [ ] Production Checklist (TS-019) initializes: Hero ✅, Scenes ✅, Prompts ✅, Illustrations (0/N)
+  - After successful import, "Production Ready" badge displays (Act 3A Accomplishment Landing Page, see TS-021)
+  - Production Checklist (TS-019) initializes: Hero ✅, Scenes ✅, Prompts ✅, Illustrations (0/N)
 
 ---
 
@@ -852,8 +852,8 @@ AG: [Implements bundle export utility, runs verification, suggests TS-005]
 - **Incomplete Tasks**: 16 (TS-011 through TS-026, excluding TS-016 post-MVP)
 - **New in v4.0**: 6 tasks (TS-021, TS-022, TS-023, TS-024, TS-025, TS-026)
 - **Updated in v4.0**: 14 tasks (TS-006 through TS-015, TS-017 through TS-020 with v4 Addenda or expanded criteria)
-- **Macro Acts Defined**: 10 (8 in MVP scope: 1A through 3D; 2 post-MVP placeholders)
-- **Accomplishment Landing Pages**: 9 (one per MVP Macro Act, plus shared pattern task TS-021)
+- **Macro Acts Defined**: 10 total (9 in MVP scope: 1A through 3D; 1 post-MVP placeholder for Act 4+)
+- **Accomplishment Landing Pages**: 10 (one per MVP Macro Act: 9 acts, plus shared pattern task TS-021)
 - **Estimated MVP Scope**: TS-001 through TS-026 (excluding TS-016 PDF post-MVP)
 
 ---
