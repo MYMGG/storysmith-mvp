@@ -1,0 +1,98 @@
+PRESENTATION PACKAGE #6 — “Reflex Recovery” (Magical When It Breaks, Not Just When It Works)
+
+Slide 1 — Title
+- Reflex Recovery: turn failures into guided recoveries
+- Goal: preserve trust, progress, and momentum under real-world conditions
+- Outcome: higher completion, fewer rage quits, fewer “lost work” moments
+
+Slide 2 — The Problem
+- In a multi-step creative pipeline, errors will happen:
+  - API hiccups, timeouts, invalid state, rate limits, image failures
+- Today, failures often feel like:
+  - “something broke, try again”
+  - unclear what was lost or what to do next
+- Result: users bail, especially non-technical users
+
+Slide 3 — The Proposal
+- Implement Reflex Recovery as a first-class UX layer:
+  - every station has recovery states (retry, resume, rollback, alternate path)
+  - progress snapshots at safe checkpoints
+  - human-friendly explanations (“what happened, what we’re doing”)
+- Recovery is part of the “ride,” not a generic error screen
+
+Slide 4 — Core Principles (non-technical, premium)
+- Never blame the user
+- Never lose progress without explicit confirmation
+- Always offer a single best next action
+- Explain in plain language; no stack traces in UI
+- Keep the user’s “trophy case” (artifacts) intact
+
+Slide 5 — Recovery Modes (what users can do)
+- Retry last step (idempotent)
+- Resume from last checkpoint
+- Roll back to previous checkpoint (safe restore)
+- Switch strategy:
+  - “Use fixtures / cached draft” (dev-only)
+  - “Use lower-cost fallback” (production if supported)
+- Escalate to support only when necessary (with exportable debug bundle)
+
+Slide 6 — Checkpoints + Snapshots (the backbone)
+- Snapshot rules:
+  - save state at the end of every act and after major artifacts
+  - keep last N snapshots (e.g., 5)
+- Snapshot includes:
+  - StoryState
+  - seed/knob profile
+  - artifact references
+  - step metadata (where user was, when saved)
+- Enables “restore last good” reliably
+
+Slide 7 — Error Taxonomy (so recovery is intentional)
+- Classify failures into:
+  - transient (timeout, 503)
+  - validation (missing field, contract mismatch)
+  - dependency (missing asset, invalid URL)
+  - capacity (rate limit)
+  - fatal (corrupt state)
+- Each class has:
+  - user message template
+  - recommended action
+  - optional auto-retry policy
+
+Slide 8 — Recovery UI (simple and calm)
+- Error panel elements:
+  - What happened (one sentence)
+  - What we preserved (reassurance)
+  - Recommended next step (primary button)
+  - Alternatives (secondary buttons)
+  - “Download debug pack” (advanced/premium/support)
+- Tone profile: “Calm Guide” (not showman, not technical)
+
+Slide 9 — Dev Tooling synergy (ties into Golden Path Simulator)
+- In dev:
+  - simulate failure at any station
+  - verify recovery flows (retry/resume/rollback)
+  - validate checkpoint integrity
+- This makes recovery testable, not theoretical
+
+Slide 10 — Risks & Mitigations
+- Risk: engineering overhead
+  - Mitigation: start with minimal universal recovery (retry/resume) then expand
+- Risk: rollback bugs
+  - Mitigation: idempotent actions + snapshot versioning + validators
+- Risk: confusing users with too many choices
+  - Mitigation: single recommended action + hide advanced options
+
+Slide 11 — Success Criteria
+- A failure never wipes user work silently
+- Users can recover and complete without support in >90% of cases
+- Drop-off after failure decreases significantly
+- Recovery experience feels premium and reassuring
+
+Slide 12 — Next Steps (implementation order)
+1) Define error taxonomy + message templates
+2) Add snapshot/checkpoint system (last N)
+3) Add minimal recovery UI (retry/resume)
+4) Add validation gating + guided fixes (field-level)
+5) Add rollback + debug pack export
+6) Add dev simulations for recovery scenarios

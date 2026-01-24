@@ -1,0 +1,86 @@
+PRESENTATION PACKAGE #1 — “Golden Path Simulator” (Dev-Only)
+
+Slide 1 — Title
+- Golden Path Simulator: the fastest way to ship better UX + higher variation
+- Dev-only tool to iterate StorySmith without replaying Acts manually
+- Outcome: more nuance, less rework, measurable RNG diversity
+
+Slide 2 — The Problem (what’s slowing us down)
+- We spend too much time re-running early acts just to test later stages
+- UX nuance is hard to validate because iterations are slow and inconsistent
+- RNG/variation is “felt” but not measured, so “samey outputs” slip through
+- Result: engineering progresses, but experience quality lags behind
+
+Slide 3 — The Proposal (what we’re building)
+- A dev-only page/route inside StorySmith that can:
+  1) Load canonical fixture bundles (Part1/Part2/Final)
+  2) Jump to any act/station instantly
+  3) Run one-click end-to-end “Golden Path”
+  4) Run “RNG Sweep” N times + compute similarity flags (“anti-samey”)
+  5) Export results to JSON for review/regression tracking
+
+Slide 4 — Why this matters (the leverage)
+- Converts iteration from “hours per test” → “minutes per test”
+- Makes UX nuance testable: every station can be revisited instantly
+- Makes RNG measurable: diversity becomes a dashboard, not a vibe
+- Reduces wasted cycles: fewer “we built it but didn’t feel it” loops
+
+Slide 5 — What it looks like (UI sketch in words)
+- Fixture Panel:
+  - Select Fixture: Part1 / Part2 / Final
+  - Load → inject into StoryState + navigate to chosen act/station
+- Jump Panel:
+  - Act selector + Station selector + Jump button
+- Golden Path Panel:
+  - Run Golden Path → progress + timing per stage + errors
+- RNG Sweep Panel:
+  - N (default 10), seed mode, knob preset
+  - Run Sweep → table of runs + similarity scores + flagged “samey” rows
+  - Download JSON (runs + metrics)
+
+Slide 6 — RNG Sweep + Similarity (anti-samey, lightweight)
+- “RNG” definition: structured variation without breaking continuity
+- Per-run tracked fields:
+  - seed, knobs, logline, scene beats, excerpted page drafts, prompt excerpts, timings, errors
+- Similarity heuristics (no heavy deps):
+  - token overlap (Jaccard) on loglines/beats/excerpts
+  - n-gram overlap on key text fields (optional)
+- Dashboard outputs:
+  - min/avg/max similarity
+  - count flagged above threshold
+  - which knobs correlate with higher diversity
+
+Slide 7 — Scope & Safety (dev-only, no production risk)
+- Must be inaccessible in prod:
+  - gate: NODE_ENV !== "production" AND STORYSMITH_DEVTOOLS=1
+- No secrets; no market upload actions
+- Minimal dependencies; reuse existing state/hooks/routes
+
+Slide 8 — Deliverables (what we ship)
+- Dev-only route (e.g., /dev/simulator)
+- 3 canonical fixtures stored safely and loadable in browser
+- Golden Path runner (uses existing APIs; fixture bypass allowed)
+- RNG Sweep runner + similarity scoring + JSON export
+- Short docs: “How to use simulator” + “How to regenerate fixtures”
+
+Slide 9 — Risks & Mitigations
+- Risk: contaminating normal UX/state flows
+  - Mitigation: isolated route, explicit state reset, feature-flag gating
+- Risk: fixtures drift from reality
+  - Mitigation: documented regen steps + “fixture version” metadata
+- Risk: similarity metrics misleading
+  - Mitigation: treat as heuristic; tune thresholds; focus on trend + flags
+
+Slide 10 — Success Criteria (how we know it worked)
+- Can jump to any act/station in <10 seconds
+- Can run Golden Path end-to-end without manual setup
+- RNG Sweep produces visible diversity metrics and flags samey runs
+- Team uses simulator as default loop for UX/RNG iteration for 1 week
+
+Slide 11 — Next Steps (execution order)
+1) Add dev-only route + gating
+2) Add fixture loading (Part1/Part2/Final)
+3) Implement Jump-to-Act/Station mapping
+4) Implement Golden Path runner + progress + timings
+5) Implement RNG Sweep + similarity scoring + JSON export
+6) Add usage docs + fixture regen notes

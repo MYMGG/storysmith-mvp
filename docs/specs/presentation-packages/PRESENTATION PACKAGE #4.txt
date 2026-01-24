@@ -1,0 +1,91 @@
+PRESENTATION PACKAGE #4 — “Tone Choreography Layer” (Consistent Fun, Earned Pride)
+
+Slide 1 — Title
+- Tone Choreography: make StorySmith feel like a premium guided attraction
+- Goal: fun + witty + entertaining, while still mature and fulfilling
+- Outcome: consistent voice across stations, less “AI-ish” output, higher trust
+
+Slide 2 — The Problem
+- Tone drifts between screens/acts (showman vs technician vs generic AI)
+- “Fun” risks becoming juvenile or gimmicky without rules
+- The same copy patterns repeat (“Great! Now…”), reducing delight
+- Result: users finish the flow but don’t feel that premium accomplishment
+
+Slide 3 — The Proposal
+- A centralized Tone Controller that sets voice by Act/Station:
+  - humor intensity
+  - formality
+  - ceremony mode
+  - pacing style (short/medium/epic)
+- Stations request a tone profile; copy/prompt generation follows it
+
+Slide 4 — What “Tone” means (components)
+- Personality: showman / craftsman / ceremonial
+- Humor style: dry wit vs warm playful vs big showman
+- Confidence: calm competence (premium) rather than hype
+- Clarity: zero technical jargon, but not childish
+- Emotional cadence: curiosity → anticipation → pride
+
+Slide 5 — Tone Profiles (by journey phase)
+- Welcome (Act I): “Inviting Showman”
+  - short lines, playful prompts, fast momentum
+- Crafting (mid-acts): “Confident Craftsman”
+  - purposeful, focused, subtly witty, avoids fluff
+- Reveal (act ends): “Ceremonial Premium Pride”
+  - dignified, emotionally resonant, accomplishment-focused
+- Recovery moments: “Calm Guide”
+  - non-blaming language, clear next steps
+
+Slide 6 — Guardrails (avoiding gimmick)
+- Banned tone pitfalls:
+  - baby talk
+  - excessive exclamation points
+  - “as an AI…”
+  - empty praise (“Amazing!” every step)
+- Approved patterns:
+  - “earned praise” (tied to what the user actually chose)
+  - “craft language” (atelier, workshop, proof-of-work)
+  - “ceremony language” (unveiling, credits, signature)
+
+Slide 7 — Microcopy System (repeatable, not repetitive)
+- Build a small library of reusable microcopy atoms:
+  - transitions (“Next station” lines)
+  - confirmations (what you heard + why it matters)
+  - prompts (multiple-choice intros)
+  - celebratory lines (earned + specific)
+  - recovery prompts (retry + preserve progress)
+- Each atom has 3–5 variants to avoid repetition fatigue
+
+Slide 8 — Persona Choreography (multiple personas over time)
+- Today: 3 personas aligned to major phases
+- Future: seasonal persona packs (monthly themes)
+- Tone Controller enables swapping persona skins without rewriting flows:
+  - station asks for “showman-witty-2” not “WizardRainbowHat”
+- Supports your “theme park attraction” vision as a system, not lore
+
+Slide 9 — Where it plugs in
+- Station System requests a tone profile per station
+- Variation Engine can adjust tone knobs safely (“more dry”, “less silly”)
+- Achievement landing pages pull from ceremony profile
+- Error recovery uses “Calm Guide” profile
+
+Slide 10 — Risks & Mitigations
+- Risk: adds complexity without measurable value
+  - Mitigation: tie success criteria to retention/completion and user feedback
+- Risk: tone feels forced or formulaic
+  - Mitigation: atom variants + station-specific callbacks to user choices
+- Risk: seasonal personas break consistency
+  - Mitigation: persona skins map to the same underlying tone profiles
+
+Slide 11 — Success Criteria
+- Output and microcopy feel consistent across the whole ride
+- Users report “fun” + “premium” simultaneously (not childish)
+- Reduction in “AI-ish” phrasing and repetitive transitions
+- Achievement pages create a felt sense of accomplishment
+
+Slide 12 — Next Steps (implementation order)
+1) Define tone profiles and banned/approved phrase rules
+2) Build microcopy atom library with variants
+3) Tag stations with tone profile + humor intensity
+4) Apply ceremony mode to all act-end achievement screens
+5) Add seasonal persona skin support (post-MVP)

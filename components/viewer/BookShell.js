@@ -55,6 +55,9 @@ export default function BookShell({ children, bookTitle, bookId, storyState }) {
     const hasPersistedRef = useRef(false);
     useEffect(() => {
         if (isLoaded && storyState && !fullState.story_state && !hasPersistedRef.current) {
+            const { logCurrentStationIfDev } = require("../../lib/stations/devStationDebug");
+            // Dev-only observability: viewer entry/persist moment
+            logCurrentStationIfDev({ routePath: `/viewer/${bookId}` });
             persistStoryState(storyState);
             hasPersistedRef.current = true;
         }

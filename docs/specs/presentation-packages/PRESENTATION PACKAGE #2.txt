@@ -1,0 +1,119 @@
+PRESENTATION PACKAGE #2 — “RNG / Variation Engine” (Anti-Samey by Design)
+
+Slide 1 — Title
+- RNG / Variation Engine: structured uniqueness without breaking continuity
+- Goal: stop “samey outputs” at scale while keeping quality premium
+- Outcome: measurable diversity + user-controlled re-rolls
+
+Slide 2 — The Problem (what’s happening today)
+- With only a few user answers, output space is small → books feel like reskins
+- “Randomness” alone causes incoherence or tone drift
+- Variation is currently implicit and unmeasured → we can’t prove uniqueness
+- Paid tier risk: users pay, then feel “I’ve seen this before”
+
+Slide 3 — The Proposal (what we’re building)
+- A first-class Variation Engine that produces “Variation Directives”
+- Inputs:
+  - IntentState (hero + preferences)
+  - Seed (deterministic)
+  - Knob profile (tone/stakes/pacing/etc.)
+- Outputs:
+  - Variation Directives (structured choices that guide outline, prose, prompts)
+  - Traceable metadata for audits + replays + experimentation
+
+Slide 4 — What “RNG” means here (definition)
+- Not “random words”
+- It is “controlled variety” across:
+  - story structures
+  - motifs and symbolism
+  - supporting cast archetypes
+  - twists and reveals
+  - emotional pacing
+  - humor intensity and style
+  - visual prompt details (without breaking consistency)
+
+Slide 5 — Variation Knobs (user + system)
+- Knobs the system can vary safely:
+  - Tone: warm / witty / epic / cozy / mysterious
+  - Stakes: small personal / family / community / world-lite
+  - Pacing: gentle / balanced / fast
+  - Setting: realistic / magical-lite / fantastical
+  - Motifs: “courage”, “belonging”, “curiosity”, etc. (picked as a set)
+  - Supporting cast: mentor/sidekick/rival archetypes
+  - Twist type: reveal / reversal / sacrifice / surprise ally
+  - Humor intensity: low/med/high + humor style (dry/warm/showman)
+  - Moral/theme emphasis (light, not preachy)
+
+Slide 6 — Weighted Pools + Constraints (the coherence guardrails)
+- Pools are weighted (not uniform) to avoid low-quality combinations
+- Constraints prevent contradictions:
+  - tone conflicts (e.g., “cozy bedtime” + “horror stakes” blocked)
+  - character continuity constraints (hero traits must align with actions)
+  - motif coherence (motif set must appear across beats/pages)
+- Output includes “reasons” for picks for debuggability
+
+Slide 7 — Seed + Replay + Selective Re-Roll (premium UX feature)
+- Every run generates a seed visible to the user (or hidden in basic)
+- Users can:
+  - lock the entire result (“save this version”)
+  - re-roll only one dimension:
+    - “new twist”
+    - “new setting”
+    - “new sidekick personality”
+    - “more/less humor”
+- This makes “RNG” feel like control, not chaos
+
+Slide 8 — Anti-Samey System (measurable uniqueness)
+- Similarity heuristics computed on key fields:
+  - logline overlap
+  - beat map overlap
+  - motif set overlap
+  - twist-type repetition
+  - prompt descriptor repetition (visual sameness)
+- “Diversity budget” rules:
+  - do not repeat same twist type within N runs
+  - motif set must differ by at least K elements
+  - side character archetype rotation
+
+Slide 9 — Where it plugs into the pipeline (stations)
+- Variation Engine runs at multiple “decision stations”:
+  - Story Blueprint (beat map + twist + motif set)
+  - Manuscript Draft (voice + pacing + humor)
+  - Illustration Prompts (style bible + per-page prompt specificity)
+- Output is always stored in state:
+  - seed
+  - knob profile
+  - selected directives
+  - diversity metrics
+
+Slide 10 — MVP vs Premium (how it scales)
+- Basic Mode:
+  - smaller knob surface (curated)
+  - fewer re-roll options (maybe 1)
+  - still uses engine under hood for quality
+- Premium Creator Mode:
+  - more knobs, deeper intent capture
+  - selective re-roll controls
+  - “Uniqueness meter” + variation history
+
+Slide 11 — Risks & Mitigations
+- Risk: complexity creep
+  - Mitigation: directives are limited set + staged rollout (Blueprint first)
+- Risk: variation breaks continuity
+  - Mitigation: constraints + validation gates per station
+- Risk: “uniqueness metrics” feel arbitrary
+  - Mitigation: keep it dev-facing first; only surface to users if it helps
+
+Slide 12 — Success Criteria
+- Generate 50 books from similar inputs with low “samey” flags
+- Users can re-roll one dimension without losing the rest
+- Variation stays coherent (no contradictions across beats/pages/prompts)
+- Premium output feels “custom made,” not “template”
+
+Slide 13 — Next Steps (implementation order)
+1) Define Variation Directive schema + seed handling
+2) Add knob profiles + weighted pools + constraints
+3) Integrate into Story Blueprint (first integration point)
+4) Add dev-only RNG Sweep harness (via Golden Path Simulator)
+5) Expand integration into Manuscript Draft + Prompt generation
+6) Add selective re-roll UX (Premium)

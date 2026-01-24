@@ -478,6 +478,61 @@ This document maps the canonical spec (`storysmith-composite-baseline-v3.0-redac
 
 ---
 
+### Devtools & Internal Tooling
+
+#### Package #1 — Golden Path Simulator (Dev-only) ✅ COMPLETE
+Goal: iterate later-stage UX + variation quickly without manually replaying Acts.
+
+- [x] **TS-035: Station Schema + Config Overlay (Dev-only)**
+  - **Status**: COMPLETE
+  - **Output**: `lib/stations/stationTypes.ts`, `lib/stations/stationConfig.ts`
+  - **Notes**: Represents current journey as a station graph; no runtime wiring required.
+
+- [x] **TS-036: Station Navigator + Graph Validation (Dev-only)**
+  - **Status**: COMPLETE
+  - **Output**: `lib/stations/navigator.ts`, `scripts/validateStations.ts`
+  - **Notes**: Includes `resolveCurrentStationId()` and minimal sanity checks for graph integrity.
+
+- [x] **TS-037: Runtime Station Debug Logging (Dev-only)**
+  - **Status**: COMPLETE
+  - **Output**: `lib/stations/devStationDebug.ts` + wiring into `pages/index.js`, `pages/projects.js`, `components/viewer/BookShell.js`
+  - **Gating**: `STORYSMITH_DEVTOOLS=1`
+  - **Notes**: Observability only; no behavior changes.
+
+- [x] **TS-021: Dev-only Simulator Route + Gating**
+  - **Status**: COMPLETE
+  - **Location**: `/pages/dev/simulator.js`
+  - **Gating**: `NODE_ENV !== "production"` && `STORYSMITH_DEVTOOLS=1`
+  - **Notes**: Quiet “Not Found” response when gated.
+
+- [x] **TS-022: Canonical Fixture Loader (Part1/Part2/Final)**
+  - **Status**: COMPLETE
+  - **Output**: `lib/fixtures/{part1,part2,final,index}.js`
+  - **Notes**: Simulator can load fixtures into main app via handshake (`storysmith_dev_fixture_payload`).
+
+- [x] **TS-023: Jump to Act/Station (Dev-only)**
+  - **Status**: COMPLETE
+  - **Notes**: Simulator can jump via route navigation or dev handshake tab switching (`storysmith_dev_jump_activeTab`).
+
+- [x] **TS-024: Golden Path Runner (Dev-only)**
+  - **Status**: COMPLETE (Phase 1)
+  - **Notes**: Runs structured blueprint generation and builds scenes deterministically; loads result into main app via fixture handshake.
+
+- [x] **TS-025: RNG Sweep + Similarity Analysis (Dev-only)**
+  - **Status**: COMPLETE
+  - **Description**: Add an RNG sweep harness to the Golden Path Simulator to measure output diversity and flag “samey” runs.
+  - **Scope**:
+    - Deterministic seeding (base seed + per-run offsets)
+    - Run N Golden Path iterations without navigation
+    - Lightweight similarity heuristic (Jaccard token overlap)
+    - Metrics: min / avg / max similarity, flagged count
+    - Downloadable JSON report (runs + metrics)
+  - **Location**: `/pages/dev/simulator.js`
+  - **Gating**: `NODE_ENV !== "production"` && `STORYSMITH_DEVTOOLS=1`
+  - **Notes**:
+    - Dev-only diagnostic tool
+    - Enables measurable anti-samey validation prior to Premium rollout
+
 ## C) Task Dependency Graph
 
 TS-001 (Persistence Decision)
@@ -500,6 +555,9 @@ TS-001 (Persistence Decision)
 
 TS-002 (PDF Decision) → TS-016 (PDF Export)
 TS-003 (PromptTree Decision) → [No dependent tasks in MVP]
+
+Devtools Package #1 (Dev-only)
+TS-035 → TS-036 → TS-037 → TS-021 → TS-022 → TS-023 → TS-024 → TS-025
 
 
 ---

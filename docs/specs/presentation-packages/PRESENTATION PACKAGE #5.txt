@@ -1,0 +1,96 @@
+PRESENTATION PACKAGE #5 — “Artifact Wall” (Progress You Can See, Keep, and Share)
+
+Slide 1 — Title
+- Artifact Wall: a persistent proof-of-work dashboard across the entire journey
+- Goal: make progress feel real and premium, not just “chat steps”
+- Outcome: higher completion, higher confidence, better shareability
+
+Slide 2 — The Problem
+- Users can’t “see” what they’ve earned until the very end
+- The journey can feel like a form: answer → next → answer → next
+- When something fails, users worry they lost everything
+- Result: drop-offs, lower perceived value, and “it felt like work”
+
+Slide 3 — The Proposal
+- A persistent “Artifact Wall” panel that shows:
+  - unlocked artifacts per act/station
+  - previews and quick exports
+  - progress passport / checklist
+  - version history (especially for RNG rerolls)
+- It’s always available, but never distracts from the main flow
+
+Slide 4 — What counts as an Artifact
+- Examples (mapped to your journey):
+  - Hero Card (identity + portrait + traits)
+  - Style Bible / Visual Consistency Tag sheet
+  - Story Blueprint (beats + themes + page plan)
+  - Draft Pages Preview (text excerpts)
+  - Prompt Pack Snapshot (illustration prompts per page)
+  - Illustration Gallery (thumbs)
+  - Final Book Pack (PDF/HTML/JSON bundle)
+  - Certificate / Credits page (ceremonial completion)
+
+Slide 5 — How it feels (premium accomplishment)
+- Each act ends with an achievement landing page
+- Artifact Wall becomes the “trophy case”
+- The user can:
+  - revisit, tweak, reroll a dimension
+  - export/share artifacts incrementally
+- This creates momentum: “I’m building something tangible”
+
+Slide 6 — UX Layout (simple, scalable)
+- Desktop:
+  - main stage on left
+  - Artifact Wall on right (collapsible)
+- Mobile:
+  - Artifact Wall becomes a “drawer” or bottom sheet
+- Each artifact card shows:
+  - name, badge, short description
+  - preview (image/text)
+  - actions: View / Download / Copy / Reuse
+
+Slide 7 — Versioning + RNG History (solves samey + control)
+- When Variation Engine produces a new seed/run:
+  - add a “Version chip” to relevant artifacts
+- Users can:
+  - compare versions (A/B)
+  - revert
+  - lock a version before proceeding
+- This turns RNG into a premium creative tool
+
+Slide 8 — Reliability + Recovery (confidence layer)
+- Artifact Wall doubles as a safety net:
+  - last good snapshot visible
+  - “Restore last checkpoint” (dev and user-friendly)
+- Reduces fear: “If something breaks, I won’t lose my progress”
+
+Slide 9 — Monetization alignment (why it supports revenue)
+- Basic Mode:
+  - fewer artifacts, fewer exports
+  - still shows progress (value)
+- Premium:
+  - more artifacts (gallery, HTML pack, market upload pack)
+  - version compare + selective rerolls
+  - “Share Pack” assets formatted for social
+- Users see “what they gain” immediately, not as a hidden promise
+
+Slide 10 — Risks & Mitigations
+- Risk: UI clutter
+  - Mitigation: collapsible, progressive reveal, only show unlocked artifacts
+- Risk: artifact explosion (too many cards)
+  - Mitigation: group by act, collapse sections, search/filter
+- Risk: exports become messy
+  - Mitigation: standardized export buttons + clear naming conventions
+
+Slide 11 — Success Criteria
+- Users can always answer: “What have I built so far?”
+- Completion rate improves (less drop-off mid-flow)
+- Users export/share intermediate artifacts (increased virality)
+- Reduced support questions about “where is my output?”
+
+Slide 12 — Next Steps (implementation order)
+1) Define artifact schema (type, title, preview, actions, source state paths)
+2) Add minimal Artifact Wall UI (collapsible)
+3) Wire in first artifacts: Hero Card + Blueprint + Progress Passport
+4) Add snapshot/version chips for rerolls
+5) Expand to gallery + final pack + certificate

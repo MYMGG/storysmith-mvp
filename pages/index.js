@@ -43,9 +43,45 @@ export default function Home() {
     }
   }, []);
 
+  const { logCurrentStationIfDev } = require("../lib/stations/devStationDebug");
   const [activeTab, setActiveTab] = useState(0);
+  // Dev-only observability: logs current station for the main app shell.
+  logCurrentStationIfDev({ routePath: "/", activeTab });
+
+  // TS-023 dev jump handshake: accept desired tab from /dev/simulator (devtools only)
+  useEffect(() => {
+    if (process.env.STORYSMITH_DEVTOOLS !== "1") return;
+    try {
+      const raw = localStorage.getItem("storysmith_dev_jump_activeTab");
+      if (raw == null) return;
+      localStorage.removeItem("storysmith_dev_jump_activeTab");
+      const n = Number(raw);
+      if (n === 0 || n === 1 || n === 2) setActiveTab(n);
+    } catch (e) {
+      // ignore
+    }
+  }, []);
   const [isVideoFinished, setIsVideoFinished] = useState(false);
   const [storyState, setStoryState] = useState(() => createInitialStoryState());
+
+  // TS-022 dev fixture handshake: load a fixture StoryState from /dev/simulator (devtools only)
+  useEffect(() => {
+    if (process.env.STORYSMITH_DEVTOOLS !== "1") return;
+    try {
+      const raw = localStorage.getItem("storysmith_dev_fixture_payload");
+      if (!raw) return;
+      localStorage.removeItem("storysmith_dev_fixture_payload");
+      const parsed = JSON.parse(raw);
+      if (parsed?.storyState) {
+        setStoryState(parsed.storyState);
+      }
+      if (parsed?.activeTab === 0 || parsed?.activeTab === 1 || parsed?.activeTab === 2) {
+        setActiveTab(parsed.activeTab);
+      }
+    } catch (e) {
+      // ignore
+    }
+  }, []);
   const [sharedResponse, setSharedResponse] = useState("");
   const bookRef = useRef(null);
   const bookElRef = useRef(null); // DOM ref for measuring BookSpread position

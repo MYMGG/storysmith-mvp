@@ -69,9 +69,12 @@ export default function ProjectsPage() {
 			const project = await projectStore.createProject(title);
 			setModalTitle('');
 			setShowNewModal(false);
+			const { logCurrentStationIfDev } = require("../lib/stations/devStationDebug");
 			projectStore.setActiveProjectId(project.id);
 			await projectStore.setProjectOpened(project.id);
 			window.dispatchEvent(new CustomEvent('projectChanged', { detail: { projectId: project.id } }));
+			// Dev-only observability: record that we're in Projects context before routing away.
+			logCurrentStationIfDev({ routePath: "/projects" });
 			router.push('/'); // Go to main app with the new project
 		} catch (error) {
 			console.error(error);
@@ -84,6 +87,8 @@ export default function ProjectsPage() {
 		if (editingId === projectId || menuOpenId === projectId) return;
 		await projectStore.setProjectOpened(projectId);
 		projectStore.setActiveProjectId(projectId);
+		// Dev-only observability: record that we're in Projects context before routing away.
+		logCurrentStationIfDev({ routePath: "/projects" });
 		router.push('/'); // Go to main app
 	}
 
