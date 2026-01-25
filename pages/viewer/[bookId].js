@@ -10,10 +10,12 @@ import TocDrawer from "../../components/viewer/TocDrawer";
 import NavArrows from "../../components/viewer/NavArrows";
 import ProgressBar from "../../components/viewer/ProgressBar";
 import { normalizeToStoryState, toViewerBook } from "../../lib/storyState";
+import { importBundle, importBundleFromString } from "../../lib/bundleImporter";
 
 // ViewerContent receives injected props from BookShell
 function ViewerContent({
   book,
+  storyState,
   mode,
   vellumExpanded,
   setVellumExpanded,
@@ -120,6 +122,7 @@ function ViewerContent({
         theme={theme}
         setTheme={setTheme}
         resetProgress={resetProgress}
+        storyState={storyState}
       />
 
       {/* TOC Drawer with navigation */}
@@ -145,9 +148,36 @@ export default function ViewerBookPage() {
   const [book, setBook] = useState(null);
   const [storyState, setStoryState] = useState(null);
   const [err, setErr] = useState(null);
+  const [uploadError, setUploadError] = useState(null);
+
+  const uploadMode = resolvedBookId === 'upload';
+  const uploadSource = useMemo(() => {
+    if (!router.query?.source) return null;
+    return Array.isArray(router.query.source) ? router.query.source[0] : router.query.source;
+  }, [router.query?.source]);
+
+  const handleBundleUpload = async (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setUploadError(null);
+    try {
+      const result = await importBundle(file, 'Final');
+      if (!result.success) {
+        setUploadError(result.errors);
+        return;
+      }
+      const viewerBook = toViewerBook(result.storyState);
+      setStoryState(result.storyState);
+      setBook(viewerBook);
+      setErr(null);
+    } catch (error) {
+      setUploadError([error.message || 'Failed to read bundle.']);
+    }
+  };
 
   useEffect(() => {
-    if (!resolvedBookId) return;
+    if (!resolvedBookId || uploadMode) return;
 
     let cancelled = false;
     const url = `/books/${resolvedBookId}-book.json`;
@@ -171,9 +201,60 @@ export default function ViewerBookPage() {
       });
 
     return () => { cancelled = true; };
-  }, [resolvedBookId]);
+  }, [resolvedBookId, uploadMode]);
+
+  useEffect(() => {
+    if (!uploadMode || uploadSource !== 'local' || book) return;
+    if (typeof window === 'undefined') return;
+
+    const stored = localStorage.getItem('storysmith_final_bundle');
+    if (!stored) {
+      setUploadError(["No local final bundle found. Please upload a file."]);
+      return;
+    }
+
+    const result = importBundleFromString(stored, 'Final');
+    if (!result.success) {
+      setUploadError(result.errors);
+      return;
+    }
+    const viewerBook = toViewerBook(result.storyState);
+    setStoryState(result.storyState);
+    setBook(viewerBook);
+  }, [uploadMode, uploadSource, book]);
 
   if (!resolvedBookId) return null;
+
+  if (uploadMode && !book) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-stone-900 text-stone-100 p-6">
+        <div className="w-full max-w-lg bg-black/40 border border-stone-700 rounded-2xl p-8 shadow-2xl text-center space-y-6">
+          <h1 className="text-3xl font-bold" style={{ fontFamily: 'Cinzel, serif' }}>
+            Open a Final Bundle
+          </h1>
+          <p className="text-sm text-stone-300">
+            Upload your `MyStoryAssetBundle_Final.json` file to view the full illustrated book.
+          </p>
+          <label className="block w-full cursor-pointer">
+            <div className="w-full flex items-center justify-center px-6 py-4 border-2 border-dashed border-stone-600 rounded-lg hover:border-amber-500/50 transition-colors">
+              <span className="text-sm text-stone-300">Choose final bundle</span>
+            </div>
+            <input type="file" className="hidden" accept=".json,application/json" onChange={handleBundleUpload} />
+          </label>
+          {uploadError && (
+            <div className="p-3 bg-red-900/30 border border-red-800 rounded text-red-200 text-sm text-left">
+              <p className="font-bold mb-1">Upload Failed</p>
+              <ul className="list-disc list-inside space-y-1">
+                {uploadError.map((errorItem, index) => (
+                  <li key={index}>{errorItem}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
 
   if (err) {
     return (
@@ -194,7 +275,7 @@ export default function ViewerBookPage() {
 
   return (
     <BookShell bookTitle={book.title} bookId={resolvedBookId} storyState={storyState}>
-      <ViewerContent book={book} />
+      <ViewerContent book={book} storyState={storyState} />
     </BookShell>
   );
 }

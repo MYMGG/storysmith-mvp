@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import { importBundle } from '../lib/bundleImporter';
 import { exportBundle } from '../lib/bundleExporter';
+import ProductionChecklist from './ProductionChecklist';
+import StoryBlueprintPanel from './StoryBlueprintPanel';
 
 export default function SpinTale({ storyState, setStoryState, setActiveTab, setSharedResponse, isLoading, isImageLoading }) {
   const [currentSpinTaleStep, setCurrentSpinTaleStep] = useState(0);
@@ -10,6 +12,8 @@ export default function SpinTale({ storyState, setStoryState, setActiveTab, setS
   const [isGeneratingBlueprint, setIsGeneratingBlueprint] = useState(false);
   const [importError, setImportError] = useState(null);
   const [showAct2Complete, setShowAct2Complete] = useState(false);
+  const [blueprintError, setBlueprintError] = useState(null);
+  const [hasStartedWeave, setHasStartedWeave] = useState(false);
 
   const hasBlueprintData = storyState.story_content?.StoryBlueprintBlock?.structure?.numberOfScenes > 0;
   const hasHeroData = storyState.story_content?.CharacterBlock?.character_details?.name;
@@ -56,6 +60,7 @@ export default function SpinTale({ storyState, setStoryState, setActiveTab, setS
   const generateBlueprint = async (heroDetails) => {
     if (isGeneratingBlueprint) return;
     setIsGeneratingBlueprint(true);
+    setBlueprintError(null);
     setSharedResponse("Wonderful! With our hero forged in starlight, let us begin to spin their legendary tale!");
 
     try {
@@ -90,6 +95,7 @@ export default function SpinTale({ storyState, setStoryState, setActiveTab, setS
     } catch (error) {
       console.error("Blueprint generation failed:", error);
       setSharedResponse("The quill has run dry. An error occurred while preparing the tale.");
+      setBlueprintError(error.message || 'Blueprint generation failed.');
     } finally {
       setIsGeneratingBlueprint(false);
     }
@@ -118,10 +124,10 @@ export default function SpinTale({ storyState, setStoryState, setActiveTab, setS
   };
 
   useEffect(() => {
-    if (hasHeroData && !hasBlueprintData && !isGeneratingBlueprint) {
+    if (hasHeroData && hasStartedWeave && !hasBlueprintData && !isGeneratingBlueprint) {
       generateBlueprint(storyState.story_content.CharacterBlock.character_details);
     }
-  }, [hasBlueprintData, hasHeroData, isGeneratingBlueprint, storyState]);
+  }, [hasBlueprintData, hasHeroData, hasStartedWeave, isGeneratingBlueprint, storyState]);
 
   useEffect(() => {
     if (hasBlueprintData && storyState.story_content.SceneJSON_array.length === 0) {
@@ -151,6 +157,7 @@ export default function SpinTale({ storyState, setStoryState, setActiveTab, setS
       if (result.success) {
         setStoryState(result.storyState);
         setSharedResponse("Ah, a new hero arrives! Let us begin their tale.");
+        setHasStartedWeave(true);
       } else {
         setImportError(result.errors.join('\n'));
         setSharedResponse("Alas, this scroll seems illegible. Please try another.");
@@ -172,7 +179,7 @@ export default function SpinTale({ storyState, setStoryState, setActiveTab, setS
     handleFileUpload(e);
   };
 
-  if (!hasHeroData) {
+  if (!hasHeroData || !hasStartedWeave) {
     return (
       <div className="h-full w-full flex flex-col items-center justify-center p-8 text-center space-y-6">
         <h2 className="text-3xl font-bold text-stone-100" style={{ fontFamily: 'Cinzel, serif' }}>
@@ -181,43 +188,49 @@ export default function SpinTale({ storyState, setStoryState, setActiveTab, setS
 
         <div className="max-w-md w-full bg-black/40 backdrop-blur-md border border-stone-600 rounded-xl p-6 shadow-2xl">
           <p className="text-stone-300 mb-6">
-            To continue the adventure, please present your Hero Bundle from Act I.
+            {hasHeroData
+              ? 'The hero stands ready. Begin weaving the story.'
+              : 'To weave the tale, the hero must be forged in Act I.'}
           </p>
 
           <div className="space-y-4">
-            <label
-              className="block w-full cursor-pointer group"
-              onDragOver={onDragOver}
-              onDrop={onDrop}
+            <button
+              onClick={() => {
+                if (!hasHeroData) {
+                  setSharedResponse("We need a hero before we can weave the tale.");
+                  return;
+                }
+                setHasStartedWeave(true);
+              }}
+              className="w-full px-6 py-3 bg-amber-600 hover:bg-amber-500 text-white rounded-lg font-bold transition-all shadow-lg"
             >
-              <div className="w-full flex items-center justify-center px-6 py-4 border-2 border-dashed border-stone-600 rounded-lg group-hover:border-amber-500/50 transition-colors">
-                <div className="space-y-1 text-center">
-                  <svg className="mx-auto h-12 w-12 text-stone-400 group-hover:text-amber-500 transition-colors" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
-                    <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                  <div className="text-sm text-stone-300">
-                    <span className="font-medium text-amber-500 group-hover:text-amber-400">Upload a file</span>
-                    <span className="pl-1">or drag and drop</span>
-                  </div>
-                  <p className="text-xs text-stone-500">.json files only</p>
-                </div>
-              </div>
-              <input
-                type="file"
-                className="hidden"
-                accept=".json"
-                onChange={handleFileUpload}
-              />
-            </label>
-
-            {importError && (
-              <div className="p-3 bg-red-900/30 border border-red-800 rounded text-red-200 text-sm">
-                <p className="font-bold">Import Failed</p>
-                <p>{importError}</p>
-              </div>
-            )}
+              Start Weaving
+            </button>
           </div>
         </div>
+
+        <div className="fixed bottom-6 right-6">
+          <label
+            className="cursor-pointer px-3 py-2 text-xs uppercase tracking-widest text-stone-300 border border-stone-600/60 bg-black/40 rounded-full hover:border-amber-500/60 transition"
+            onDragOver={onDragOver}
+            onDrop={onDrop}
+          >
+            Import Bundle (Dev)
+            <input
+              type="file"
+              className="hidden"
+              accept=".json"
+              onChange={handleFileUpload}
+            />
+          </label>
+        </div>
+
+        {importError && (
+          <div className="fixed bottom-20 right-6 max-w-xs p-3 bg-red-900/30 border border-red-800 rounded text-red-200 text-sm text-left">
+            <p className="font-bold">Import Failed</p>
+            <p>{importError}</p>
+          </div>
+        )}
       </div>
     );
   }
@@ -231,11 +244,22 @@ export default function SpinTale({ storyState, setStoryState, setActiveTab, setS
   }
 
   if (!hasBlueprintData) {
-    // This state is now handled by the isGeneratingBlueprint check above.
-    // This return is a safety net but should not be reached with the fix.
     return (
-      <div className="h-full w-full flex flex-col justify-end p-8 text-center text-stone-300">
-        <p>Awaiting the story blueprint... The magic is at work!</p>
+      <div className="h-full w-full flex flex-col justify-end p-8 text-center text-stone-300 space-y-4">
+        {blueprintError ? (
+          <div className="bg-red-900/30 border border-red-800 rounded-lg p-4 text-sm text-red-200">
+            <p className="font-bold mb-2">Blueprint Failed</p>
+            <p>{blueprintError}</p>
+            <button
+              onClick={() => generateBlueprint(storyState.story_content?.CharacterBlock?.character_details || {})}
+              className="mt-4 w-full px-4 py-2 bg-amber-600 hover:bg-amber-500 text-white rounded-lg font-semibold"
+            >
+              Retry Blueprint
+            </button>
+          </div>
+        ) : (
+          <p>Awaiting the story blueprint... The magic is at work!</p>
+        )}
       </div>
     );
   }
@@ -276,6 +300,12 @@ export default function SpinTale({ storyState, setStoryState, setActiveTab, setS
             >
               Proceed to Act III: Bind Book
             </button>
+          </div>
+          <div className="mt-6">
+            <ProductionChecklist storyState={storyState} />
+          </div>
+          <div className="mt-6">
+            <StoryBlueprintPanel storyState={storyState} />
           </div>
         </div>
       </div>
@@ -319,6 +349,7 @@ export default function SpinTale({ storyState, setStoryState, setActiveTab, setS
           >
             Not quite, let’s refine this scene.
           </button>
+          <ProductionChecklist storyState={storyState} />
         </div>
       )}
     </div>

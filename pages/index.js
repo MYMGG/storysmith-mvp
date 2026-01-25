@@ -157,7 +157,11 @@ export default function Home() {
           className="fixed left-0 right-0 z-20 pointer-events-none"
           style={{ top: actsBarTop, transform: 'translateY(-50%)' }}
         >
-          <ActsBar activeTab={activeTab} setActiveTab={setActiveTab} />
+          <ActsBar
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            highlightActIndex={activeTab === 0 && storyState.story_content?.CharacterBlock ? 1 : null}
+          />
         </div>
 
         <main ref={mainRef} className="flex-1 flex items-center justify-center p-4">
