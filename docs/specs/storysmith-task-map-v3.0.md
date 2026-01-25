@@ -852,8 +852,8 @@ AG: [Implements bundle export utility, runs verification, suggests TS-005]
 - **Incomplete Tasks**: 16 (TS-011 through TS-026, excluding TS-016 post-MVP)
 - **New in v4.0**: 6 tasks (TS-021, TS-022, TS-023, TS-024, TS-025, TS-026)
 - **Updated in v4.0**: 14 tasks (TS-006 through TS-015, TS-017 through TS-020 with v4 Addenda or expanded criteria)
-- **Macro Acts Defined**: 10 total (9 in MVP scope: 1A through 3D; 1 post-MVP placeholder for Act 4+)
-- **Accomplishment Landing Pages**: 10 (one per MVP Macro Act: 9 acts, plus shared pattern task TS-021)
+- **Macro Acts Defined**: 9 (1A through 3D in MVP scope; Acts 4+ deferred to post-MVP)
+- **Accomplishment Landing Pages**: 9 (one per MVP Macro Act: 1A, 1B, 1C, 2A, 2B, 3A, 3B, 3C, 3D)
 - **Estimated MVP Scope**: TS-001 through TS-026 (excluding TS-016 PDF post-MVP)
 
 ---
