@@ -436,11 +436,8 @@ export default function ForgeHero({
         ].filter(Boolean);
         const heroTraits = [...traitPool, 'Not specified', 'Not specified', 'Not specified'].slice(0, 3);
         return (
-          <div className="text-center space-y-6">
-            {heroImageUrl && (
-              <img src={heroImageUrl} alt="Your Hero" className="rounded-lg shadow-2xl mb-4 max-h-48 mx-auto" />
-            )}
-            <div className="bg-gradient-to-br from-stone-900 via-stone-800 to-stone-900 border border-amber-500/40 rounded-2xl p-6 text-left shadow-2xl text-stone-100">
+          <div className="text-center space-y-4">
+            <div className="bg-gradient-to-br from-stone-900 via-stone-800 to-stone-900 border border-amber-500/40 rounded-2xl p-5 text-left shadow-2xl text-stone-100">
               <p className="text-xs uppercase tracking-[0.3em] text-amber-400">Hero Card</p>
               <div className="mt-3 flex flex-col sm:flex-row sm:items-center gap-4">
                 {heroImageUrl ? (
@@ -477,19 +474,13 @@ export default function ForgeHero({
               </div>
             </div>
             <p className="text-stone-800 text-lg font-bold" style={{ fontFamily: 'Cinzel, serif' }}>
-              {heroName} is ready for adventure!
+              {heroName} is ready for adventure. Choose Weave above to begin the tale.
             </p>
             <button
               onClick={handleExportBundle}
-              className={`${choiceButtonStyle} bg-amber-600/20 hover:bg-amber-600/30 border-amber-600`}
+              className="fixed bottom-6 right-6 px-3 py-2 text-xs uppercase tracking-widest text-stone-200 border border-stone-400/60 bg-black/40 rounded-full hover:border-amber-500/60 transition"
             >
-              📥 Download Hero Bundle
-            </button>
-            <button
-              onClick={handleProceedToActII}
-              className={choiceButtonStyle}
-            >
-              Continue to Act II →
+              Export Bundle (Dev)
             </button>
           </div>
         );

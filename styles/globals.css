@@ -30,3 +30,13 @@
   animation: fadeInShadow 1s ease-in forwards;
 }
 
+@keyframes weaveBeacon {
+  0% { transform: translateY(0); box-shadow: 0 0 12px rgba(251, 191, 36, 0.35); }
+  50% { transform: translateY(-6px); box-shadow: 0 0 28px rgba(251, 191, 36, 0.6); }
+  100% { transform: translateY(0); box-shadow: 0 0 12px rgba(251, 191, 36, 0.35); }
+}
+
+.animate-weave-beacon {
+  animation: weaveBeacon 1.6s ease-in-out infinite;
+}
+

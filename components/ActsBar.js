@@ -10,7 +10,7 @@ import { Sword, Scroll, Book, CheckCircle2 } from 'lucide-react';
  * @param {number} props.activeTab - Current active tab (0=Forge, 1=SpinTale, 2=BindBook)
  * @param {Function} props.setActiveTab - Function to change active tab
  */
-export default function ActsBar({ activeTab, setActiveTab }) {
+export default function ActsBar({ activeTab, setActiveTab, highlightActIndex = null }) {
 	const acts = [
 		{ name: 'Forge', icon: Sword, tabIndex: 0 },
 		{ name: 'Weave', icon: Scroll, tabIndex: 1 },
@@ -41,6 +41,7 @@ export default function ActsBar({ activeTab, setActiveTab }) {
 					const isActive = status === 'active';
 					const isCompleted = status === 'completed';
 					const isLocked = status === 'locked';
+					const isHighlighted = highlightActIndex === act.tabIndex && !isActive;
 
 					return (
 						<div key={act.name} className="flex items-center">
@@ -60,15 +61,16 @@ export default function ActsBar({ activeTab, setActiveTab }) {
 								title={`Act ${act.tabIndex + 1}: ${act.name}`}
 								disabled={false}
 							>
-								<div className={`
-                  w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center border-[3px] transition-all duration-300
-                  ${isActive
-										? 'bg-gold border-gold shadow-[0_0_35px_rgba(197,160,89,0.85),0_0_60px_rgba(197,160,89,0.4)] scale-110 text-parchment z-20 transform -translate-y-1'
-										: 'bg-parchment hover:bg-parchment-deep'}
-                  ${isCompleted ? 'border-gold text-gold shadow-sm' : ''}
-                  ${isLocked ? 'border-leather/25 text-leather/40 bg-parchment-deep' : ''}
-                  ${!isActive && !isCompleted && !isLocked ? 'border-gold/70 text-gold' : ''}
-                `}>
+							<div className={`
+								w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center border-[3px] transition-all duration-300
+								${isActive
+									? 'bg-gold border-gold shadow-[0_0_35px_rgba(197,160,89,0.85),0_0_60px_rgba(197,160,89,0.4)] scale-110 text-parchment z-20 transform -translate-y-1'
+									: 'bg-parchment hover:bg-parchment-deep'}
+								${isCompleted ? 'border-gold text-gold shadow-sm' : ''}
+								${isLocked ? 'border-leather/25 text-leather/40 bg-parchment-deep' : ''}
+								${!isActive && !isCompleted && !isLocked ? 'border-gold/70 text-gold' : ''}
+								${isHighlighted ? 'animate-weave-beacon border-amber-400 text-amber-600 bg-parchment' : ''}
+							`}>
 									{isCompleted ? <CheckCircle2 className="w-6 h-6" /> : <Icon className="w-6 h-6" />}
 								</div>
 								<span

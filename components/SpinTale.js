@@ -127,7 +127,7 @@ export default function SpinTale({ storyState, setStoryState, setActiveTab, setS
     if (hasHeroData && hasStartedWeave && !hasBlueprintData && !isGeneratingBlueprint) {
       generateBlueprint(storyState.story_content.CharacterBlock.character_details);
     }
-  }, [hasBlueprintData, hasHeroData, isGeneratingBlueprint, storyState]);
+  }, [hasBlueprintData, hasHeroData, hasStartedWeave, isGeneratingBlueprint, storyState]);
 
   useEffect(() => {
     if (hasBlueprintData && storyState.story_content.SceneJSON_array.length === 0) {
