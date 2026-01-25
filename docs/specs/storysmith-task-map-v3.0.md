@@ -523,6 +523,7 @@ Each Macro Act concludes with an **Accomplishment Landing Page** that reveals:
     - "Production Ready" (Act 3A, OPTIONAL icon: 🎬)
     - "Illustrations Complete" (Act 3B, OPTIONAL icon: 🖼️) — in-progress during image loop
     - "Assets Packaged" (Act 3C, OPTIONAL icon: 📦)
+    - "Book Published" (Act 3D, OPTIONAL icon: 🏆)
   - [ ] During Act 3B image generation, per-scene progress UI shows:
     - Scene index (e.g., "Illustrating page 5 of 12…")
     - Status icon: ⏳ working / ✅ done / ❌ failed / 🔄 retrying (anti-samey collision)
@@ -557,7 +558,7 @@ Each Macro Act concludes with an **Accomplishment Landing Page** that reveals:
   - [ ] Screen displays all proof-of-work artifacts:
     - Hero Card (from TS-017)
     - Story Blueprint (from TS-018)
-    - Production Checklist with all 8 badges green (from TS-019)
+    - Production Checklist with all 9 badges green (from TS-019)
   - [ ] Unveiling screen includes:
     - cover preview
     - "Open Your Book" (loads the viewer with the final StoryState)
@@ -569,7 +570,7 @@ Each Macro Act concludes with an **Accomplishment Landing Page** that reveals:
       - Optional: "Mode: Premium Creator" badge if Premium mode was active
   - [ ] Share Pack v1 (lightweight, no ZIP required):
     - copyable "share blurb" text (1–2 sentences)
-    - Share Pack v1 text dynamically includes badge count (e.g., "I just created a 12-page story and earned 8 creator badges with StorySmith!")
+    - Share Pack v1 text dynamically includes badge count (e.g., "I just created a 12-page story and earned 9 creator badges with StorySmith!")
     - optional download of cover image if available (or at minimum, a clear viewer link)
   - [ ] The screen reinforces accomplishment via visible proof-of-work artifacts (Hero Card, Blueprint, Checklist state)
 - **Verification**: Manual test: complete Act III → confirm Unveiling renders → "Open Your Book" works end-to-end in viewer → final bundle downloads → copy/share text works → responsive at ~360px width
@@ -792,7 +793,7 @@ TS-001 (Persistence Decision)
                                                                     │       └── TS-013 (Final Export)
                                                                     │               └── TS-014 (Viewer Integration)
                                                                     │                       ├── TS-019 (Checklist + Progress)
-                                                                    │                       │       └── [v4: expanded with 8 badges + per-scene progress UI]
+                                                                    │                       │       └── [v4: expanded with 9 badges + per-scene progress UI]
                                                                     │                       └── TS-020 (Grand Unveiling)
                                                                     │                               └── [v4: expanded as Act 3D Accomplishment Landing Page]
                                                                     ├── TS-015 (Error Recovery)
@@ -845,8 +846,8 @@ AG: [Implements bundle export utility, runs verification, suggests TS-005]
 
 - **Total Tasks**: 26 (was 20 in v3.0)
 - **P0 (Critical Path)**: 9 tasks (unchanged)
-- **P1 (Important)**: 14 tasks (was 8; added TS-021, TS-022, TS-023, TS-024, TS-025)
-- **P2 (Nice-to-have)**: 3 tasks (added TS-026)
+- **P1 (Important)**: 13 tasks (was 8; added TS-021, TS-022, TS-023, TS-024, TS-025)
+- **P2 (Nice-to-have)**: 4 tasks (added TS-026)
 - **Decision Tasks**: 3 (unchanged: TS-001, TS-002, TS-003)
 - **Completed Tasks**: 10 (TS-001 through TS-010)
 - **Incomplete Tasks**: 16 (TS-011 through TS-026, excluding TS-016 post-MVP)
