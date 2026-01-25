@@ -1,4 +1,7 @@
-export default function SettingsDrawer({ settingsOpen, setSettingsOpen, theme, setTheme, resetProgress }) {
+import ProductionChecklist from '../ProductionChecklist';
+import StoryBlueprintPanel from '../StoryBlueprintPanel';
+
+export default function SettingsDrawer({ settingsOpen, setSettingsOpen, theme, setTheme, resetProgress, storyState }) {
     if (!settingsOpen) return null;
 
     return (
@@ -39,6 +42,18 @@ export default function SettingsDrawer({ settingsOpen, setSettingsOpen, theme, s
                     </div>
 
                     {/* Other settings stubs can go here */}
+                    {storyState && (
+                        <div>
+                            <h3 className="text-stone-400 text-xs uppercase tracking-widest font-bold mb-3">Production</h3>
+                            <ProductionChecklist storyState={storyState} title="Checklist" />
+                        </div>
+                    )}
+                    {storyState && (
+                        <div>
+                            <h3 className="text-stone-400 text-xs uppercase tracking-widest font-bold mb-3">Blueprint</h3>
+                            <StoryBlueprintPanel storyState={storyState} title="Story Blueprint" />
+                        </div>
+                    )}
                 </div>
 
                 {/* Danger Zone */}

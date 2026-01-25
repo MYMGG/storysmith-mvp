@@ -41,6 +41,45 @@ export default function ForgeHero({
     generateSurpriseHero,
   } = useForgeHeroApis(heroDetails, setSharedResponse);
 
+  const normalizeTraits = (traitsValue) => {
+    if (!traitsValue) return [];
+    if (Array.isArray(traitsValue)) return traitsValue.map((item) => String(item).trim()).filter(Boolean);
+    if (typeof traitsValue === 'string') {
+      return traitsValue
+        .split(/,|and/i)
+        .map((trait) => trait.trim())
+        .filter(Boolean);
+    }
+    if (typeof traitsValue === 'object') {
+      return Object.values(traitsValue).map((item) => String(item).trim()).filter(Boolean);
+    }
+    return [String(traitsValue)];
+  };
+
+  const ProgressPassport = ({ currentStep }) => {
+    const steps = ['Station 1', 'Station 2', 'Station 3', 'Station 4'];
+    return (
+      <div className="flex items-center justify-between gap-2 bg-black/10 border border-stone-300/60 rounded-full px-4 py-2 text-xs uppercase tracking-[0.2em] text-stone-600">
+        {steps.map((label, index) => {
+          const isComplete = currentStep >= index + 1;
+          return (
+            <div key={label} className="flex items-center gap-2">
+              <span
+                className={`w-5 h-5 rounded-full flex items-center justify-center border ${isComplete
+                  ? 'bg-amber-500/80 border-amber-500 text-stone-900'
+                  : 'border-stone-400 text-stone-500'}
+                text-[10px] font-bold`}
+              >
+                {isComplete ? '✓' : index + 1}
+              </span>
+              <span className="hidden sm:inline">{label}</span>
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
+
   useEffect(() => {
     if (currentForgeHeroStep === 0) {
       setSharedResponse("Welcome, brave adventurer! To begin our grand tale, tell me, from where shall our hero emerge?");
@@ -385,15 +424,60 @@ export default function ForgeHero({
             ) : (<p className="text-stone-700">An error occurred during image generation.</p>)}
           </div>
         );
-      case 4:
+      case 4: {
         // Completion screen with export button
+        const heroName = heroDetails.name || storyState.story_content?.CharacterBlock?.hero_name || 'Your Hero';
+        const heroDescription = storyState.story_content?.CharacterBlock?.hero_description
+          || `A ${heroDetails.age || 'young'} ${heroDetails.gender || 'hero'} with ${heroDetails.traits || 'brave and kind'} traits.`;
+        const traitPool = [
+          ...normalizeTraits(heroDetails.traits),
+          heroDetails.wardrobe ? `Wardrobe: ${heroDetails.wardrobe}` : null,
+          heroDetails.signatureItem ? `Signature: ${heroDetails.signatureItem}` : null,
+        ].filter(Boolean);
+        const heroTraits = [...traitPool, 'Not specified', 'Not specified', 'Not specified'].slice(0, 3);
         return (
           <div className="text-center space-y-6">
             {heroImageUrl && (
               <img src={heroImageUrl} alt="Your Hero" className="rounded-lg shadow-2xl mb-4 max-h-48 mx-auto" />
             )}
+            <div className="bg-gradient-to-br from-stone-900 via-stone-800 to-stone-900 border border-amber-500/40 rounded-2xl p-6 text-left shadow-2xl text-stone-100">
+              <p className="text-xs uppercase tracking-[0.3em] text-amber-400">Hero Card</p>
+              <div className="mt-3 flex flex-col sm:flex-row sm:items-center gap-4">
+                {heroImageUrl ? (
+                  <img src={heroImageUrl} alt="Hero portrait" className="w-24 h-24 rounded-xl object-cover border border-amber-500/40" />
+                ) : (
+                  <div className="w-24 h-24 rounded-xl bg-stone-700/60 border border-amber-500/30 flex items-center justify-center text-xs text-stone-300">
+                    Portrait TBD
+                  </div>
+                )}
+                <div>
+                  <h3 className="text-2xl font-bold" style={{ fontFamily: 'Cinzel, serif' }}>{heroName}</h3>
+                  <p className="text-sm text-stone-300 mt-1">{heroDescription}</p>
+                </div>
+              </div>
+              <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                <div className="bg-black/30 rounded-lg p-3">
+                  <p className="text-xs uppercase tracking-widest text-stone-400 mb-2">Defining Traits</p>
+                  <ul className="space-y-1">
+                    {heroTraits.map((trait, index) => (
+                      <li key={`${trait}-${index}`}>• {trait}</li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="bg-black/30 rounded-lg p-3 space-y-3">
+                  <div>
+                    <p className="text-xs uppercase tracking-widest text-stone-400">Flaw</p>
+                    <p>Not specified</p>
+                  </div>
+                  <div>
+                    <p className="text-xs uppercase tracking-widest text-stone-400">Goal</p>
+                    <p>Not specified</p>
+                  </div>
+                </div>
+              </div>
+            </div>
             <p className="text-stone-800 text-lg font-bold" style={{ fontFamily: 'Cinzel, serif' }}>
-              {heroDetails.name || 'Your Hero'} is ready for adventure!
+              {heroName} is ready for adventure!
             </p>
             <button
               onClick={handleExportBundle}
@@ -409,6 +493,7 @@ export default function ForgeHero({
             </button>
           </div>
         );
+      }
       default: return null;
     }
   };
@@ -419,7 +504,10 @@ export default function ForgeHero({
     return (
       <div className="w-full h-full flex flex-col" style={{ fontFamily: '"Cinzel", serif', color: '#4f463c' }}>
         <div className="flex-1 overflow-y-auto custom-scrollbar">
-          {renderStepContent()}
+          <div className="space-y-6">
+            <ProgressPassport currentStep={currentForgeHeroStep} />
+            {renderStepContent()}
+          </div>
         </div>
       </div>
     );
@@ -445,7 +533,10 @@ export default function ForgeHero({
         {sharedResponse}
       </div>
       <div className="flex-1 overflow-y-auto custom-scrollbar pr-4">
-        {renderStepContent()}
+        <div className="space-y-6">
+          <ProgressPassport currentStep={currentForgeHeroStep} />
+          {renderStepContent()}
+        </div>
       </div>
     </div>
   );
