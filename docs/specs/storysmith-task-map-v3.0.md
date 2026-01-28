@@ -744,6 +744,29 @@ Each Macro Act concludes with an **Accomplishment Landing Page** that reveals:
 - **Risk/Notes**:
   - **ASSUMPTION**: Perceptual hash (80% threshold) is sufficient proxy for "samey" detection (VERIFY via manual inspection correlation study)
   - **ASSUMPTION**: <10% generation collision rate is acceptable for MVP (VERIFY via production metrics post-launch)
+---
+
+### TS-027: DECISION — Repo Tooling Standardization (PNPM + single lockfile)
+- **Title**: Standardize on pnpm, enforce single lockfile
+- **Priority**: P0
+- **DependsOn**: None (Urgent Governance)
+- **SpecRefs**: Repo Governance Rules
+- **FilesLikelyTouched**:
+  - `package.json` (add `packageManager` field)
+  - `pnpm-lock.yaml` (keep/update)
+  - `package-lock.json` (DELETE)
+  - `.npmrc` (verify)
+- **AcceptanceCriteria**:
+  - [ ] **Node LTS Only**: Use Node **22 LTS** (preferred) or **24**. Node versions outside pnpm’s published compatibility table (e.g., 25.x) are not allowed for CI/dev.
+  - [ ] **PNPM Only**: Repo standardized on `pnpm`.
+  - [ ] **One Lockfile**: `pnpm-lock.yaml` is the ONLY lockfile; `package-lock.json` deleted.
+  - [ ] **Pinned Version**: `package.json` includes `"packageManager": "pnpm@10.x"`.
+  - [ ] **Corepack**: Instructions recommend `corepack enable` (or equivalent) for deterministic versioning.
+  - [ ] **Clean Install**: `pnpm install --frozen-lockfile` passes on fresh clone.
+- **Verification**: Run install + dev under Node 22 (or 24): `corepack enable` → `pnpm -v` matches pinned version → `pnpm install --frozen-lockfile` → `pnpm dev` boots successfully.
+- **Risk/Notes**:
+  - Mixed lockfiles cause install ambiguity (Vercel selects command based on lockfile presence).
+  - Pruning `package-lock.json` ensures Vercel uses `pnpm`.
 
 ---
 
@@ -844,18 +867,18 @@ AG: [Implements bundle export utility, runs verification, suggests TS-005]
 
 ## E) Summary
 
-- **Total Tasks**: 26 (was 20 in v3.0)
-- **P0 (Critical Path)**: 9 tasks (unchanged)
+- **Total Tasks**: 27 (was 20 in v3.0, +7 in v4.0 patch)
+- **P0 (Critical Path)**: 10 tasks (was 9; added TS-027)
 - **P1 (Important)**: 13 tasks (was 8; added TS-021, TS-022, TS-023, TS-024, TS-025)
 - **P2 (Nice-to-have)**: 4 tasks (added TS-026)
-- **Decision Tasks**: 3 (unchanged: TS-001, TS-002, TS-003)
+- **Decision Tasks**: 4 (was 3; added TS-027)
 - **Completed Tasks**: 10 (TS-001 through TS-010)
-- **Incomplete Tasks**: 16 (TS-011 through TS-026, excluding TS-016 post-MVP)
-- **New in v4.0**: 6 tasks (TS-021, TS-022, TS-023, TS-024, TS-025, TS-026)
+- **Incomplete Tasks**: 17 (TS-011 through TS-027, excluding TS-016 post-MVP)
+- **New in v4.0**: 7 tasks (TS-021, TS-022, TS-023, TS-024, TS-025, TS-026, TS-027)
 - **Updated in v4.0**: 14 tasks (TS-006 through TS-015, TS-017 through TS-020 with v4 Addenda or expanded criteria)
 - **Macro Acts Defined**: 9 (1A through 3D in MVP scope; Acts 4+ deferred to post-MVP)
 - **Accomplishment Landing Pages**: 9 (one per MVP Macro Act: 1A, 1B, 1C, 2A, 2B, 3A, 3B, 3C, 3D)
-- **Estimated MVP Scope**: TS-001 through TS-026 (excluding TS-016 PDF post-MVP)
+- **Estimated MVP Scope**: TS-001 through TS-027 (excluding TS-016 PDF post-MVP)
 
 ---
 
