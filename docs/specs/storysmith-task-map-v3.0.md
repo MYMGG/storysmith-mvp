@@ -757,12 +757,13 @@ Each Macro Act concludes with an **Accomplishment Landing Page** that reveals:
   - `package-lock.json` (DELETE)
   - `.npmrc` (verify)
 - **AcceptanceCriteria**:
+  - [ ] **Node LTS Only**: Use Node **22 LTS** (preferred) or **24**. Node versions outside pnpm’s published compatibility table (e.g., 25.x) are not allowed for CI/dev.
   - [ ] **PNPM Only**: Repo standardized on `pnpm`.
   - [ ] **One Lockfile**: `pnpm-lock.yaml` is the ONLY lockfile; `package-lock.json` deleted.
   - [ ] **Pinned Version**: `package.json` includes `"packageManager": "pnpm@10.x"`.
   - [ ] **Corepack**: Instructions recommend `corepack enable` (or equivalent) for deterministic versioning.
   - [ ] **Clean Install**: `pnpm install --frozen-lockfile` passes on fresh clone.
-- **Verification**: `ls` shows only `pnpm-lock.yaml`; `cat package.json` shows `packageManager`; `pnpm install` works.
+- **Verification**: Run install + dev under Node 22 (or 24): `corepack enable` → `pnpm -v` matches pinned version → `pnpm install --frozen-lockfile` → `pnpm dev` boots successfully.
 - **Risk/Notes**:
   - Mixed lockfiles cause install ambiguity (Vercel selects command based on lockfile presence).
   - Pruning `package-lock.json` ensures Vercel uses `pnpm`.
